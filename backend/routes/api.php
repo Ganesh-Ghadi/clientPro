@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\DevtasController;
+use App\Http\Controllers\Api\ClientsController;
 use App\Http\Controllers\Api\GurujisController;
 use App\Http\Controllers\Api\ReportsController;
 use App\Http\Controllers\Api\ProfilesController;
@@ -25,6 +26,7 @@ Route::post('/login', [UserController::class, 'login']);
 
 Route::group(['middleware'=>['auth:sanctum', 'permission']], function(){
   
+   Route::resource('clients', ClientsController::class);  
    Route::resource('profiles', ProfilesController::class);  
    Route::resource('denominations', DenominationsController::class);  
    Route::resource('receipts', ReceiptsController::class);  

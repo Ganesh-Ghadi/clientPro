@@ -1,61 +1,64 @@
-import React, { useEffect, useState } from "react";
-import { Toaster, toast } from "sonner";
+import React, { useEffect, useState } from 'react';
+import { Toaster, toast } from 'sonner';
 
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
   RouterProvider,
-} from "react-router-dom";
-import MainLayout from "./layouts/MainLayout";
-import Homepage from "./pages/HomePage/Homepage";
-import Projects from "./pages/Projects/Projects";
-import Roles from "./pages/Roles/index";
-import UpdateRoles from "./pages/Roles/Update";
+} from 'react-router-dom';
+import MainLayout from './layouts/MainLayout';
+import Homepage from './pages/HomePage/Homepage';
+import Projects from './pages/Projects/Projects';
+import Roles from './pages/Roles/index';
+import UpdateRoles from './pages/Roles/Update';
 
-import Users from "./pages/Users/index";
-import CreateUsers from "./pages/Users/Create";
-import UpdateUsers from "./pages/Users/Update";
-import Devtas from "./pages/Devtas/index";
-import CreateDevtas from "./pages/Devtas/Create";
-import UpdateDevtas from "./pages/Devtas/Update";
-import AnteshteeAmounts from "./pages/AnteshteeAmounts/index";
-import CreateAnteshtee from "./pages/AnteshteeAmounts/Create";
-import UpdateAnteshtee from "./pages/AnteshteeAmounts/Update";
-import Gurujis from "./pages/Gurujis/index";
-import CreateGurujis from "./pages/Gurujis/Create";
-import UpdateGurujis from "./pages/Gurujis/Update";
-import ReceiptTypes from "./pages/ReceiptTypes/index";
-import CreateReceiptTypes from "./pages/ReceiptTypes/Create";
-import UpdateReceiptTypes from "./pages/ReceiptTypes/Update";
-import PoojaTypes from "./pages/PoojaTypes/index";
-import CreatePoojaType from "./pages/PoojaTypes/Create";
-import UpdatePoojaType from "./pages/PoojaTypes/Update";
-import PoojaDates from "./pages/PoojaDates/index";
-import CreatePoojaDate from "./pages/PoojaDates/Create";
-import UpdatePoojaDate from "./pages/PoojaDates/Update";
-import Denominations from "./pages/Denominations/index";
-import CreateDenominations from "./pages/Denominations/Create";
-import UpdateDenominations from "./pages/Denominations/Update";
-import Receipts from "./pages/Receipts/index";
-import CreateReceipts from "./pages/Receipts/Create";
-import UpdateReceipts from "./pages/Receipts/Update";
-import Permissions from "./pages/Permissions/index";
-import AllReceipts from "./pages/Reports/AllReceipts/index";
-import ReceiptSummary from "./pages/Reports/ReceiptSummary/index";
-import ChequeCollectionReport from "./pages/Reports/ChequeCollectionReport/index";
-import UPICollectionReport from "./pages/Reports/UPICollectionReport/index";
-import KhatReport from "./pages/Reports/KhatReport/index";
-import NaralReport from "./pages/Reports/NaralReport/index";
-import CancelledReceiptReport from "./pages/Reports/CancelledReceiptReport/index";
-import ReceiptsReport from "./pages/Reports/ReceiptsReport/index";
-import GotravaliSummaryReport from "./pages/Reports/GotravaliSummaryReport/index";
-import GotravaliReport from "./pages/Reports/GotravaliReport/index";
-import Login from "./pages/Login/Login";
-import Register from "./pages/Register/Register";
-import Error from "./customComponents/Error/Error";
-import ProtectedRoute from "./customComponents/ProtectedRoute/ProtectedRoute";
-import GuestRoute from "./customComponents/GuestRoute/GuestRoute";
+import Users from './pages/Users/index';
+import CreateUsers from './pages/Users/Create';
+import UpdateUsers from './pages/Users/Update';
+import Clients from './pages/Clients/index';
+import CreateClients from './pages/Clients/Create';
+import UpdateClients from './pages/Clients/Update';
+import Devtas from './pages/Devtas/index';
+import CreateDevtas from './pages/Devtas/Create';
+import UpdateDevtas from './pages/Devtas/Update';
+import AnteshteeAmounts from './pages/AnteshteeAmounts/index';
+import CreateAnteshtee from './pages/AnteshteeAmounts/Create';
+import UpdateAnteshtee from './pages/AnteshteeAmounts/Update';
+import Gurujis from './pages/Gurujis/index';
+import CreateGurujis from './pages/Gurujis/Create';
+import UpdateGurujis from './pages/Gurujis/Update';
+import ReceiptTypes from './pages/ReceiptTypes/index';
+import CreateReceiptTypes from './pages/ReceiptTypes/Create';
+import UpdateReceiptTypes from './pages/ReceiptTypes/Update';
+import PoojaTypes from './pages/PoojaTypes/index';
+import CreatePoojaType from './pages/PoojaTypes/Create';
+import UpdatePoojaType from './pages/PoojaTypes/Update';
+import PoojaDates from './pages/PoojaDates/index';
+import CreatePoojaDate from './pages/PoojaDates/Create';
+import UpdatePoojaDate from './pages/PoojaDates/Update';
+import Denominations from './pages/Denominations/index';
+import CreateDenominations from './pages/Denominations/Create';
+import UpdateDenominations from './pages/Denominations/Update';
+import Receipts from './pages/Receipts/index';
+import CreateReceipts from './pages/Receipts/Create';
+import UpdateReceipts from './pages/Receipts/Update';
+import Permissions from './pages/Permissions/index';
+import AllReceipts from './pages/Reports/AllReceipts/index';
+import ReceiptSummary from './pages/Reports/ReceiptSummary/index';
+import ChequeCollectionReport from './pages/Reports/ChequeCollectionReport/index';
+import UPICollectionReport from './pages/Reports/UPICollectionReport/index';
+import KhatReport from './pages/Reports/KhatReport/index';
+import NaralReport from './pages/Reports/NaralReport/index';
+import CancelledReceiptReport from './pages/Reports/CancelledReceiptReport/index';
+import ReceiptsReport from './pages/Reports/ReceiptsReport/index';
+import GotravaliSummaryReport from './pages/Reports/GotravaliSummaryReport/index';
+import GotravaliReport from './pages/Reports/GotravaliReport/index';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
+import Error from './customComponents/Error/Error';
+import ProtectedRoute from './customComponents/ProtectedRoute/ProtectedRoute';
+import GuestRoute from './customComponents/GuestRoute/GuestRoute';
 
 const App = () => {
   const router = createBrowserRouter(
@@ -77,6 +80,9 @@ const App = () => {
           <Route path="/users" element={<Users />} />
           <Route path="/users/create" element={<CreateUsers />} />
           <Route path="/users/:id/edit" element={<UpdateUsers />} />
+          <Route path="/clients" element={<Clients />} />
+          <Route path="/clients/create" element={<CreateClients />} />
+          <Route path="/clients/:id/edit" element={<UpdateClients />} />
           <Route path="/devtas" element={<Devtas />} />
           <Route path="/devtas/create" element={<CreateDevtas />} />
           <Route path="/devtas/:id/edit" element={<UpdateDevtas />} />
@@ -142,7 +148,7 @@ const App = () => {
           path="/login"
           element={
             <GuestRoute>
-              {" "}
+              {' '}
               <Login />
             </GuestRoute>
           }
