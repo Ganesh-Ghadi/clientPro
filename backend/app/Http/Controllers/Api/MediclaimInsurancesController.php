@@ -18,13 +18,18 @@ class MediclaimInsurancesController extends BaseController
      */
     public function index(Request $request): JsonResponse
     {
-        $query = MediclaimInsurance::query();
-
+        $query = MediclaimInsurance::with('client');
         if ($request->query('search')) {
             $searchTerm = $request->query('search');
     
             $query->where(function ($query) use ($searchTerm) {
-                $query->where('company_name', 'like', '%' . $searchTerm . '%');
+                $query->where('company_name', 'like', '%' . $searchTerm . '%')
+                ->orWhere('broker_name', 'like', '%' . $searchTerm . '%')
+                ->orWhere('sum_insured', 'like', '%' . $searchTerm . '%')
+                ->orWhereHas('client', function($query) use($searchTerm){
+                    $query->where('client_name','like', '%' . $searchTerm . '%');
+                });
+
             });
         }
         $mediclaimInsurances = $query->Orderby('id', 'desc')->paginate(20);
@@ -50,7 +55,8 @@ class MediclaimInsurancesController extends BaseController
         $mediclaimInsurance->have_mediclaim_insurance = $request->input("have_mediclaim_insurance");
         $mediclaimInsurance->broker_name = $request->input("broker_name");
         $mediclaimInsurance->proposal_date = $request->input("proposal_date");
-        $mediclaimInsurance->permium_payment_mode = $request->input("permium_payment_mode");
+        $mediclaimInsurance->end_date = $request->input("end_date");
+        $mediclaimInsurance->premium_payment_mode = $request->input("premium_payment_mode");
         $mediclaimInsurance->sum_insured = $request->input("sum_insured");
         $mediclaimInsurance->save();
      
@@ -88,7 +94,8 @@ class MediclaimInsurancesController extends BaseController
         $mediclaimInsurance->have_mediclaim_insurance = $request->input("have_mediclaim_insurance");
         $mediclaimInsurance->broker_name = $request->input("broker_name");
         $mediclaimInsurance->proposal_date = $request->input("proposal_date");
-        $mediclaimInsurance->permium_payment_mode = $request->input("permium_payment_mode");
+        $mediclaimInsurance->end_date = $request->input("end_date");
+        $mediclaimInsurance->premium_payment_mode = $request->input("premium_payment_mode");
         $mediclaimInsurance->sum_insured = $request->input("sum_insured");
         $mediclaimInsurance->save();
        

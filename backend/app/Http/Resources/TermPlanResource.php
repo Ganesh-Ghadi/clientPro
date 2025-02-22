@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MediclaimInsuranceResource extends JsonResource
+class TermPlanResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,8 +18,8 @@ class MediclaimInsuranceResource extends JsonResource
             'id'                => $this->id,
             'client_id'         => $this->client_id,
             'client_name'         => $this->client ? $this->client->client_name : "",
-            'have_mediclaim_insurance'    => $this->have_mediclaim_insurance,
-            'company_name'      => $this->company_name,
+            'have_term_plan'    => $this->have_term_plan,
+            'term_company_name'      => $this->term_company_name,
             'broker_name'       => $this->broker_name,
             'proposal_date'     => $this->proposal_date,
             'end_date'     => $this->end_date,

@@ -47,14 +47,14 @@ const Index = () => {
   const navigate = useNavigate();
 
   const {
-    data: DevtasData,
-    isLoading: isDevtasDataLoading,
-    isError: isDevtasDataError,
+    data: MediclaimInsurancesData,
+    isLoading: isMediclaimInsurancesDataLoading,
+    isError: isMediclaimInsurancesDataError,
   } = useQuery({
-    queryKey: ["devtas", currentPage, search], // This is the query key
+    queryKey: ["mediclaim_insurances", currentPage, search], // This is the query key
     queryFn: async () => {
       try {
-        const response = await axios.get("/api/devtas", {
+        const response = await axios.get("/api/mediclaim_insurances", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -73,12 +73,12 @@ const Index = () => {
   });
 
   // pagination start
-  const { Devtas, pagination } = DevtasData || {};
+  const { MediclaimInsurances, pagination } = MediclaimInsurancesData || {};
   const { current_page, last_page, total, per_page } = pagination || {}; // Destructure pagination data
 
   // pagination end
 
-  if (isDevtasDataError) {
+  if (isMediclaimInsurancesDataError) {
     return <p>Error fetching data</p>;
   }
 
@@ -87,17 +87,17 @@ const Index = () => {
       <div className="w-full p-5">
         <div className="w-full mb-7 text-right md:pr-6">
           <Button
-            onClick={() => navigate("/devtas/create")}
+            onClick={() => navigate("/mediclaim_insurances/create")}
             variant=""
             className="text-sm dark:text-white shadow-xl bg-blue-600 hover:bg-blue-700"
           >
-            Add Devta
+            Add Mediclaim Insurance
           </Button>
         </div>
         <div className="px-5 dark:bg-background pt-1 w-full bg-white shadow-xl border rounded-md">
           <div className="w-full py-3 flex flex-col gap-2 md:flex-row justify-between items-center">
             <h2 className="text-2xl font-semibold leading-none tracking-tight">
-              Devtas
+              Mediclaim Insurances
             </h2>
             {/* search field here */}
             <div className="relative p-0.5 ">
@@ -124,7 +124,7 @@ const Index = () => {
                 }}
                 id="search"
                 className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Search for Devtas"
+                placeholder="Search for Mediclaim Insurances"
               />
             </div>
             {/* end */}
@@ -144,20 +144,31 @@ const Index = () => {
             </TableCaption>
             <TableHeader className="dark:bg-background bg-gray-100  rounded-md">
               <TableRow>
-                <TableHead className="">Name</TableHead>
-
+                <TableHead className="">Client Name</TableHead>
+                <TableHead className="">Company Name</TableHead>
+                <TableHead className="">Broker Name</TableHead>
+                <TableHead className="">Sum Insured</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {Devtas &&
-                Devtas.map((devta) => (
+              {MediclaimInsurances &&
+                MediclaimInsurances.map((insurance) => (
                   <TableRow
-                    key={devta.id}
+                    key={insurance.id}
                     className=" dark:border-b dark:border-gray-600"
                   >
                     <TableCell className="font-medium p-2">
-                      {devta.devta_name}
+                      {insurance.client_name}
+                    </TableCell>
+                    <TableCell className="font-medium p-2">
+                      {insurance.company_name}
+                    </TableCell>
+                    <TableCell className="font-medium p-2">
+                      {insurance.broker_name}
+                    </TableCell>
+                    <TableCell className="font-medium p-2">
+                    ₹{insurance.sum_insured}
                     </TableCell>
 
                     <TableCell className="text-right p-2 pr-5">
@@ -178,12 +189,16 @@ const Index = () => {
                             variant="ghost"
                             size="sm"
                             className="w-full text-sm justify-start"
-                            onClick={() => navigate(`/devtas/${devta.id}/edit`)}
+                            onClick={() =>
+                              navigate(
+                                `/mediclaim_insurances/${insurance.id}/edit`
+                              )
+                            }
                           >
                             <Pencil /> Edit
                           </Button>
                           <div className="w-full">
-                            <Delete id={devta.id} />
+                            <Delete id={insurance.id} />
                           </div>
                         </DropdownMenuContent>
                       </DropdownMenu>

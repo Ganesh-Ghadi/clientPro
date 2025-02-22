@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mediclaim_insurances', function (Blueprint $table) {
+        Schema::create('term_plans', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id'); 
-            $table->boolean('have_mediclaim_insurance')->nullable();
-            $table->string('company_name', 100)->nullable();
+            $table->boolean('have_term_plan')->nullable();
+            $table->string('term_company_name', 100)->nullable();
             $table->string('broker_name', 100)->nullable();
             $table->date('proposal_date')->nullable();
             $table->date('end_date')->nullable();
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mediclaim_insurances');
+        Schema::dropIfExists('term_plans');
     }
 };

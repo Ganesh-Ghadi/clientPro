@@ -29,6 +29,8 @@ Route::group(['middleware'=>['auth:sanctum', 'permission']], function(){
   
    Route::resource('clients', ClientsController::class);  
    Route::resource('mediclaim_insurances', MediclaimInsurancesController::class);  
+   Route::get('/all_clients', [ClientsController::class, 'allClients'])->name("clients.all");
+
    Route::resource('profiles', ProfilesController::class);  
    Route::resource('denominations', DenominationsController::class);  
    Route::resource('receipts', ReceiptsController::class);  

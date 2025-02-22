@@ -19,16 +19,35 @@ import {
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 const formSchema = z.object({
   // devta_name: z.string().min(2, "Name must be at least 2 characters"),
-  devta_name: z
+  client_id: z.coerce.number().min(1, "client field is required."),
+  company_name: z
     .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(100, "Name must be at max 100 characters")
-    .regex(/^[A-Za-z\s\u0900-\u097F]+$/, "Name can only contain letters."), // Allow letters and spaces, including Marathi
+    .min(2, "Company name must be at least 2 characters")
+    .max(100, "Company name must be at max 100 characters")
+    .regex(
+      /^[A-Za-z\s\u0900-\u097F]+$/,
+      "Company name can only contain letters."
+    ),
+  sum_insured: z.coerce.number().min(1, "Sum Insured field is required"),
+  broker_name: z
+    .string()
+    .min(2, "Broker name must be at least 2 characters")
+    .max(100, "Broker name must be at max 100 characters")
+    .regex(
+      /^[A-Za-z\s\u0900-\u097F]+$/,
+      "Broker name can only contain letters."
+    ),
+  proposal_date: z.string().min(1, "Proposal date field is required."),
+  premium_payment_mode: z
+    .string()
+    .min(1, "Premium payment mode field is required.")
+    .max(100, "Premium payment mode field must be at max 100 characters"),
+  end_date: z.string().optional(),
 });
 const Create = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -37,8 +56,37 @@ const Create = () => {
   const token = user.token;
   const navigate = useNavigate();
   const defaultValues = {
-    devta_name: "",
+    client_id: "",
+    company_name: "",
+    broker_name: "",
+    proposal_date: "",
+    company_name: "",
+    premium_payment_mode: "",
+    sum_insured: "",
+    end_date: "",
   };
+
+  const {
+    data: allClientsData,
+    isLoading: isAllClientsDataLoading,
+    isError: isAllClientsDataError,
+  } = useQuery({
+    queryKey: ["all_clients"], // This is the query key
+    queryFn: async () => {
+      try {
+        const response = await axios.get(`/api/all_clients`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return response.data?.data; // Return the fetched data
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    keepPreviousData: true, // Keep previous data until the new data is available
+  });
 
   const {
     control,
@@ -49,7 +97,7 @@ const Create = () => {
 
   const storeMutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post("/api/devtas", data, {
+      const response = await axios.post("/api/mediclaim_insurances", data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Include the Bearer token
@@ -58,10 +106,10 @@ const Create = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries("devtas");
-      toast.success("Devta Added Successfully");
+      queryClient.invalidateQueries("mediclaim_insurances");
+      toast.success("Mediclaim Insurance Added Successfully");
       setIsLoading(false);
-      navigate("/devtas");
+      navigate("/mediclaim_insurances");
     },
     onError: (error) => {
       setIsLoading(false);
@@ -70,17 +118,17 @@ const Create = () => {
         const serverErrors = error.response.data.errors;
         if (serverStatus === false) {
           if (serverErrors.devta_name) {
-            setError("devta_name", {
+            setError("company_name", {
               type: "manual",
-              message: serverErrors.devta_name[0], // The error message from the server
+              message: serverErrors.company_name[0], // The error message from the server
             });
             // toast.error("The poo has already been taken.");
           }
         } else {
-          toast.error("Failed to add Devta details.");
+          toast.error("Failed to add Mediclaim Insurance details.");
         }
       } else {
-        toast.error("Failed to add Devta details.");
+        toast.error("Failed to add Mediclaim Insurance details.");
       }
     },
   });
@@ -97,11 +145,11 @@ const Create = () => {
           <div className="flex items-center space-x-2 text-gray-700">
             <span className="">
               <Button
-                onClick={() => navigate("/devtas")}
+                onClick={() => navigate("/mediclaim_insurances")}
                 className="p-0 text-blue-700 text-sm font-light"
                 variant="link"
               >
-                Devtas
+                Mediclaim Insurances
               </Button>
             </span>
             <span className="text-gray-400">/</span>
@@ -113,41 +161,228 @@ const Create = () => {
         {/* form style strat */}
         <div className="px-5 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
           <div className="w-full py-3 flex justify-start items-center">
-            <h2 className="text-lg  font-normal">Add Devta</h2>
+            <h2 className="text-lg  font-normal">Add Mediclaim Insurance</h2>
           </div>
           {/* row starts */}
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="w-full mb-8 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
+            <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-4">
               <div className="relative">
-                <Label className="font-normal" htmlFor="devta_name">
-                  Name: <span className="text-red-500">*</span>
+                <Label className="font-normal" htmlFor="client_id">
+                  Client: <span className="text-red-500">*</span>
                 </Label>
                 <Controller
-                  name="devta_name"
+                  name="client_id"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue placeholder="Select Client" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Select Client</SelectLabel>
+                          {allClientsData?.Clients &&
+                            allClientsData?.Clients.map((client) => (
+                              <SelectItem value={String(client.id)}>
+                                {client.client_name}
+                              </SelectItem>
+                            ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.client_id && (
+                  <p className="absolute text-red-500 text-sm mt-1 left-0">
+                    {errors.client_id.message}
+                  </p>
+                )}
+              </div>
+              <div className="relative">
+                <Label className="font-normal" htmlFor="company_name">
+                  Company Name: <span className="text-red-500">*</span>
+                </Label>
+                <Controller
+                  name="company_name"
                   control={control}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      id="devta_name"
+                      id="company_name"
                       className="mt-1"
                       type="text"
-                      placeholder="Enter name"
+                      placeholder="Enter company name"
                     />
                   )}
                 />
-                {errors.devta_name && (
+                {errors.company_name && (
                   <p className="absolute text-red-500 text-sm mt-1 left-0">
-                    {errors.devta_name.message}
+                    {errors.company_name.message}
                   </p>
                 )}
               </div>
             </div>
+            <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-4">
+              <div className="relative">
+                <Label className="font-normal" htmlFor="broker_name">
+                  Broker Name: <span className="text-red-500">*</span>
+                </Label>
+                <Controller
+                  name="broker_name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      id="broker_name"
+                      className="mt-1"
+                      type="text"
+                      placeholder="Enter broker name"
+                    />
+                  )}
+                />
+                {errors.broker_name && (
+                  <p className="absolute text-red-500 text-sm mt-1 left-0">
+                    {errors.broker_name.message}
+                  </p>
+                )}
+              </div>
+              <div className="relative">
+                <Label className="font-normal" htmlFor="proposal_date">
+                  Proposal Date: <span className="text-red-500">*</span>
+                </Label>
+                <Controller
+                  name="proposal_date"
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      id="proposal_date"
+                      className="dark:bg-[var(--foreground)] mt-1 text-sm w-full p-2 pr-3 rounded-md border border-1"
+                      type="date"
+                      placeholder="Enter to date"
+                    />
+                  )}
+                />
+                {errors.proposal_date && (
+                  <p className="absolute text-red-500 text-sm mt-1 left-0">
+                    {errors.proposal_date.message}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-4">
+              <div className="relative">
+                <Label className="font-normal" htmlFor="premium_payment_mode">
+                  Premium Payment Mode:: <span className="text-red-500">*</span>
+                </Label>
+                <Controller
+                  name="premium_payment_mode"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="mt-1">
+                        <SelectValue className="" placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel className="">Select</SelectLabel>
+                          <SelectItem value="Monthly">Monthly</SelectItem>
+                          <SelectItem value="Quarterly">Quarterly</SelectItem>
+                          <SelectItem value="Semi-Annual">
+                            Semi-Annual
+                          </SelectItem>
+                          <SelectItem value="Annual">Annual</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.premium_payment_mode && (
+                  <p className="absolute text-red-500 text-sm mt-1 left-0">
+                    {errors.premium_payment_mode.message}
+                  </p>
+                )}
+              </div>
+              {/* <div className="relative">
+                <Label className="font-normal" htmlFor="premium_payment_mode">
+                  Premium Payment Mode: <span className="text-red-500">*</span>
+                </Label>
+                <Controller
+                  name="premium_payment_mode"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      id="premium_payment_mode"
+                      className="mt-1"
+                      type="text"
+                      placeholder="Enter mode"
+                    />
+                  )}
+                />
+                {errors.premium_payment_mode && (
+                  <p className="absolute text-red-500 text-sm mt-1 left-0">
+                    {errors.premium_payment_mode.message}
+                  </p>
+                )}
+              </div> */}
+
+              <div className="relative">
+                <Label className="font-normal" htmlFor="sum_insured">
+                  Sum Insured: <span className="text-red-500">*</span>
+                </Label>
+                <Controller
+                  name="sum_insured"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      id="sum_insured"
+                      className="mt-1"
+                      type="number"
+                      placeholder="Enter amount"
+                    />
+                  )}
+                />
+                {errors.sum_insured && (
+                  <p className="absolute text-red-500 text-sm mt-1 left-0">
+                    {errors.sum_insured.message}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-4">
+              <div className="relative">
+                <Label className="font-normal" htmlFor="end_date">
+                  End Date:
+                </Label>
+                <Controller
+                  name="end_date"
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      id="end_date"
+                      className="dark:bg-[var(--foreground)] mt-1 text-sm w-full p-2 pr-3 rounded-md border border-1"
+                      type="date"
+                      placeholder="Enter to date"
+                    />
+                  )}
+                />
+                {errors.end_date && (
+                  <p className="absolute text-red-500 text-sm mt-1 left-0">
+                    {errors.end_date.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
             {/* row ends */}
             <div className="w-full gap-4 mt-4 flex justify-end items-center">
               <Button
                 type="button"
                 className="dark:text-white shadow-xl bg-red-600 hover:bg-red-700"
-                onClick={() => navigate("/devtas")}
+                onClick={() => navigate("/mediclaim_insurances")}
               >
                 Cancel
               </Button>
