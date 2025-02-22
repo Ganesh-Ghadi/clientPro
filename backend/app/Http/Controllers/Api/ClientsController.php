@@ -20,6 +20,20 @@ use Illuminate\Validation\ValidationException;
 
 class ClientsController extends BaseController
 {
+
+    private function validateFamilyMember($familyMember)
+    {
+        $validator = Validator::make($familyMember, [
+            'name' => 'required|string|max:255',
+            'relation' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
+    }
+    
     /**
      * All Devtas.
      */
@@ -84,6 +98,7 @@ class ClientsController extends BaseController
         if(!$client->save()) {
             dd($client); exit;
         }
+        
       if($request->input('family_members')){
          $familyMembers = $request->input('family_members');
           foreach($familyMembers as $familyMember){
@@ -101,18 +116,7 @@ class ClientsController extends BaseController
    
     }
 
-    private function validateFamilyMember($familyMember)
-{
-    $validator = Validator::make($familyMember, [
-        'name' => 'required|string|max:255',
-        'relation' => 'required|string|max:255',
-        'date_of_birth' => 'required|date',
-    ]);
-
-    if ($validator->fails()) {
-        throw new ValidationException($validator);
-    }
-}
+   
 
     /**
      * Show Devta.
@@ -136,6 +140,29 @@ class ClientsController extends BaseController
         if(!$client){
             return $this->sendError("Client not found", ['error'=>['Client not found']]);
         }
+        
+        $mobile = $request->input("mobile");
+
+        // Only query if the mobile number is provided
+        if ($mobile) {
+            // Exclude current profile ID from the query
+            $existingMobile = client::where('mobile', $mobile)
+                                     ->where('id', '!=', $client->id) // Exclude current profile
+                                     ->first();
+    
+            // Check if mobile number is already taken
+            if ($existingMobile) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validation failed',
+                    'errors' => [
+                        'mobile' => ['Mobile number has already been taken.']
+                    ],
+                ], 422);
+            }
+        }
+        
+      
         $client->client_name = $request->input('client_name');
         $client->date_of_birth = $request->input("date_of_birth");
         $client->email = $request->input("email");
@@ -145,6 +172,25 @@ class ClientsController extends BaseController
         $client->residential_address = $request->input("residential_address");
         $client->residential_address_pincode = $request->input("residential_address_pincode");
         $client->save();
+
+        $removeFamilyMembers = FamilyMember::where('client_id',$client->id)->get();
+        $removeFamilyMembers->each(function($familyMember) {
+            $familyMember->delete();
+        });
+
+        if($request->input('family_members')){
+            $familyMembers = $request->input('family_members');
+             foreach($familyMembers as $familyMember){
+               $this->validateFamilyMember($familyMember); // Custom validation method
+   
+               $member = new FamilyMember();
+               $member->client_id = $client->id;
+               $member->family_member_name = $familyMember['name'];
+               $member->relation = $familyMember['relation'];
+               $member->family_member_dob = $familyMember['date_of_birth'];
+               $member->save();
+             }
+        }
         return $this->sendResponse(["Client"=> new ClientResource($client)], "Client Updated successfully");
     }
 
@@ -154,13 +200,18 @@ class ClientsController extends BaseController
     public function destroy(string $id): JsonResponse
     {
         $client = Client::find($id);
+        
         if(!$client){
             return $this->sendError("Client not found", ['error'=>'Client not found']);
         }
-
+        
+        $removeFamilyMembers = FamilyMember::where('client_id',$client->id)->get();
+        $removeFamilyMembers->each(function($familyMember) {
+            $familyMember->delete();
+        });
+        
         $client->delete();
-
-        return $this->sendResponse([], "client deleted successfully");
+        return $this->sendResponse([], "Client deleted successfully");
     }
 
     /**

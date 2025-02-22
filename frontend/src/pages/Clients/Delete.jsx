@@ -35,7 +35,7 @@ const Delete = ({ id }) => {
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: async () => {
-      const response = await axios.delete(`/api/profiles/${id}`, {
+      const response = await axios.delete(`/api/clients/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Include the Bearer token
@@ -44,10 +44,10 @@ const Delete = ({ id }) => {
       return response.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries("users");
-      toast.success("User Deleted Successfully");
+      queryClient.invalidateQueries("clients");
+      toast.success("Client Deleted Successfully");
       setIsLoading(false);
-      navigate("/users");
+      navigate("/clients");
     },
     onError: (error) => {
       setIsLoading(false);
@@ -74,8 +74,8 @@ const Delete = ({ id }) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              This action cannot be undone. This will permanently delete Client
+              information along with its family members information.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

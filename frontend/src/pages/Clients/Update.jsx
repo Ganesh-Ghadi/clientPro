@@ -36,14 +36,14 @@ const formSchema = z.object({
     .regex(/^[A-Za-z\s\u0900-\u097F]+$/, "Name can only contain letters."), // Allow letters and spaces, including Marathi
   office_address: z.string().optional(),
   office_address_pincode: z
-    .string()
+    .union([z.string(), z.number()])
     .refine((val) => val === "" || /^\d{6}$/.test(val), {
       message: "Pincode must be of 6 digits.",
     })
     .optional(),
   residential_address: z.string().optional(),
   residential_address_pincode: z
-    .string()
+    .union([z.string(), z.number()])
     .refine((val) => val === "" || /^\d{6}$/.test(val), {
       message: "Pincode must be of 6 digits.",
     })
@@ -223,11 +223,11 @@ const Update = () => {
         {/* breadcrumb ends */}
 
         {/* form style strat */}
-        <div className="px-5 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
-          <div className="w-full py-3 flex justify-start items-center">
-            <h2 className="text-lg  font-normal">Personal Information</h2>
-          </div>
-          {/* row starts */}
+          <div className="px-5 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
+            <div className="w-full py-3 flex justify-start items-center">
+              <h2 className="text-lg  font-normal">Personal Information</h2>
+            </div>
+            {/* row starts */}
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
               <div className="relative">
@@ -431,141 +431,141 @@ const Update = () => {
               </div>
             </div>
 
-            {/* start */}
-            {fields.map((item, index) => (
-              <div
-                className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4"
-                key={item.id}
-              >
-                <div className="relative">
-                  <Label
-                    className="font-normal"
-                    htmlFor={`family_members[${index}].name`}
-                  >
-                    Family Member Name:<span className="text-red-500">*</span>
-                  </Label>
-                  <Controller
-                    name={`family_members[${index}].name`}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        id={`family_members[${index}].name`}
-                        className="mt-1"
-                        placeholder="Enter family member name"
-                      />
+              {/* start */}
+              {fields.map((item, index) => (
+                <div
+                  className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4"
+                  key={item.id}
+                >
+                  <div className="relative">
+                    <Label
+                      className="font-normal"
+                      htmlFor={`family_members[${index}].name`}
+                    >
+                      Family Member Name:<span className="text-red-500">*</span>
+                    </Label>
+                    <Controller
+                      name={`family_members[${index}].name`}
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          id={`family_members[${index}].name`}
+                          className="mt-1"
+                          placeholder="Enter family member name"
+                        />
+                      )}
+                    />
+                    {errors.family_members?.[index]?.name && (
+                      <p className="absolute text-red-500 text-sm mt-1 left-0">
+                        {errors.family_members[index].name.message}
+                      </p>
                     )}
-                  />
-                  {errors.family_members?.[index]?.name && (
-                    <p className="absolute text-red-500 text-sm mt-1 left-0">
-                      {errors.family_members[index].name.message}
-                    </p>
-                  )}
-                </div>
+                  </div>
 
-                <div className="relative">
-                  <Label
-                    className="font-normal"
-                    htmlFor={`family_members[${index}].relation`}
-                  >
-                    Relation:<span className="text-red-500">*</span>
-                  </Label>
-                  <Controller
-                    name={`family_members[${index}].relation`}
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        id={`family_members[${index}].relation`}
-                        className="mt-1"
-                        placeholder="Enter relation"
-                      />
+                  <div className="relative">
+                    <Label
+                      className="font-normal"
+                      htmlFor={`family_members[${index}].relation`}
+                    >
+                      Relation:<span className="text-red-500">*</span>
+                    </Label>
+                    <Controller
+                      name={`family_members[${index}].relation`}
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          id={`family_members[${index}].relation`}
+                          className="mt-1"
+                          placeholder="Enter relation"
+                        />
+                      )}
+                    />
+                    {errors.family_members?.[index]?.relation && (
+                      <p className="absolute text-red-500 text-sm mt-1 left-0">
+                        {errors.family_members[index].relation.message}
+                      </p>
                     )}
-                  />
-                  {errors.family_members?.[index]?.relation && (
-                    <p className="absolute text-red-500 text-sm mt-1 left-0">
-                      {errors.family_members[index].relation.message}
-                    </p>
-                  )}
-                </div>
+                  </div>
 
-                <div className="relative">
-                  <Label
-                    className="font-normal"
-                    htmlFor={`family_members[${index}].date_of_birth`}
-                  >
-                    Date of Birth:<span className="text-red-500">*</span>
-                  </Label>
-                  <Controller
-                    name={`family_members[${index}].date_of_birth`}
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        id={`family_members[${index}].date_of_birth`}
-                        className="dark:bg-[var(--foreground)] mt-1 text-sm w-full p-2 pr-3 rounded-md border border-1"
-                        type="date"
-                        placeholder="Enter date of birth"
-                      />
+                  <div className="relative">
+                    <Label
+                      className="font-normal"
+                      htmlFor={`family_members[${index}].date_of_birth`}
+                    >
+                      Date of Birth:<span className="text-red-500">*</span>
+                    </Label>
+                    <Controller
+                      name={`family_members[${index}].date_of_birth`}
+                      control={control}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          id={`family_members[${index}].date_of_birth`}
+                          className="dark:bg-[var(--foreground)] mt-1 text-sm w-full p-2 pr-3 rounded-md border border-1"
+                          type="date"
+                          placeholder="Enter date of birth"
+                        />
+                      )}
+                    />
+                    {errors.family_members?.[index]?.date_of_birth && (
+                      <p className="absolute text-red-500 text-sm mt-1 left-0">
+                        {errors.family_members[index].date_of_birth.message}
+                      </p>
                     )}
-                  />
-                  {errors.family_members?.[index]?.date_of_birth && (
-                    <p className="absolute text-red-500 text-sm mt-1 left-0">
-                      {errors.family_members[index].date_of_birth.message}
-                    </p>
-                  )}
-                </div>
+                  </div>
 
+                  <Button
+                    type="button"
+                    onClick={() => remove(index)} // Remove family member
+                    className="mt-5 bg-red-500 hover:bg-red-600 text-white"
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ))}
+
+              {/* Add Family Member Button */}
+              <div className="flex justify-start mt-4">
                 <Button
                   type="button"
-                  onClick={() => remove(index)} // Remove family member
-                  className="mt-5 bg-red-500 hover:bg-red-600 text-white"
+                  onClick={() =>
+                    append({ name: "", relation: "", date_of_birth: "" })
+                  } // Add new family member
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
-                  Remove
+                  Add Family Member
                 </Button>
               </div>
-            ))}
-
-            {/* Add Family Member Button */}
-            <div className="flex justify-start mt-4">
-              <Button
-                type="button"
-                onClick={() =>
-                  append({ name: "", relation: "", date_of_birth: "" })
-                } // Add new family member
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                Add Family Member
-              </Button>
-            </div>
             {/* </div> */}
             {/* end */}
             {/* row ends */}
-            <div className="w-full gap-4 mt-4 flex justify-end items-center">
-              <Button
-                type="button"
-                className="dark:text-white shadow-xl bg-red-600 hover:bg-red-700"
-                onClick={() => navigate("/clients")}
-              >
-                Cancel
-              </Button>
+              <div className="w-full gap-4 mt-4 flex justify-end items-center">
+                <Button
+                  type="button"
+                  className="dark:text-white shadow-xl bg-red-600 hover:bg-red-700"
+                  onClick={() => navigate("/clients")}
+                >
+                  Cancel
+                </Button>
 
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className=" dark:text-white  shadow-xl bg-green-600 hover:bg-green-700"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="animate-spin mr-2" /> {/* Spinner */}
-                    Submitting...
-                  </>
-                ) : (
-                  "Submit"
-                )}
-              </Button>
-            </div>
-          </form>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className=" dark:text-white  shadow-xl bg-green-600 hover:bg-green-700"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="animate-spin mr-2" /> {/* Spinner */}
+                      Updating...
+                    </>
+                  ) : (
+                    "Update"
+                  )}
+                </Button>
+          </div>
+        </form>
         </div>
       </div>
     </>
