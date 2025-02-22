@@ -5,7 +5,16 @@ import { z } from "zod";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
-
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
@@ -203,32 +212,31 @@ const Update = () => {
   return (
     <>
       <div className="p-5">
-        {/* breadcrumb start */}
-        <div className=" mb-7 text-sm">
-          <div className="flex items-center space-x-2 text-gray-700">
-            <span className="">
-              {/* Users */}
-              <Button
-                onClick={() => navigate("/clients")}
-                className="p-0 text-blue-700 text-sm font-light"
-                variant="link"
-              >
-                Clients
-              </Button>
-            </span>
-            <span className="text-gray-400">/</span>
-            <span className="dark:text-gray-300">Add</span>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {/* breadcrumb start */}
+          <div className=" mb-7 text-sm">
+            <div className="flex items-center space-x-2 text-gray-700">
+              <span className="">
+                {/* Users */}
+                <Button
+                  onClick={() => navigate("/clients")}
+                  className="p-0 text-blue-700 text-sm font-light"
+                  variant="link"
+                >
+                  Clients
+                </Button>
+              </span>
+              <span className="text-gray-400">/</span>
+              <span className="dark:text-gray-300">Edit</span>
+            </div>
           </div>
-        </div>
-        {/* breadcrumb ends */}
-
-        {/* form style strat */}
+          {/* breadcrumb ends */}
+          {/* form style strat */}
           <div className="px-5 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
             <div className="w-full py-3 flex justify-start items-center">
               <h2 className="text-lg  font-normal">Personal Information</h2>
             </div>
             {/* row starts */}
-          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
               <div className="relative">
                 <Label className="font-normal" htmlFor="client_name">
@@ -431,142 +439,268 @@ const Update = () => {
               </div>
             </div>
 
-              {/* start */}
-              {fields.map((item, index) => (
-                <div
-                  className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4"
-                  key={item.id}
-                >
-                  <div className="relative">
-                    <Label
-                      className="font-normal"
-                      htmlFor={`family_members[${index}].name`}
-                    >
-                      Family Member Name:<span className="text-red-500">*</span>
-                    </Label>
-                    <Controller
-                      name={`family_members[${index}].name`}
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          id={`family_members[${index}].name`}
-                          className="mt-1"
-                          placeholder="Enter family member name"
-                        />
-                      )}
-                    />
-                    {errors.family_members?.[index]?.name && (
-                      <p className="absolute text-red-500 text-sm mt-1 left-0">
-                        {errors.family_members[index].name.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="relative">
-                    <Label
-                      className="font-normal"
-                      htmlFor={`family_members[${index}].relation`}
-                    >
-                      Relation:<span className="text-red-500">*</span>
-                    </Label>
-                    <Controller
-                      name={`family_members[${index}].relation`}
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          id={`family_members[${index}].relation`}
-                          className="mt-1"
-                          placeholder="Enter relation"
-                        />
-                      )}
-                    />
-                    {errors.family_members?.[index]?.relation && (
-                      <p className="absolute text-red-500 text-sm mt-1 left-0">
-                        {errors.family_members[index].relation.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="relative">
-                    <Label
-                      className="font-normal"
-                      htmlFor={`family_members[${index}].date_of_birth`}
-                    >
-                      Date of Birth:<span className="text-red-500">*</span>
-                    </Label>
-                    <Controller
-                      name={`family_members[${index}].date_of_birth`}
-                      control={control}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          id={`family_members[${index}].date_of_birth`}
-                          className="dark:bg-[var(--foreground)] mt-1 text-sm w-full p-2 pr-3 rounded-md border border-1"
-                          type="date"
-                          placeholder="Enter date of birth"
-                        />
-                      )}
-                    />
-                    {errors.family_members?.[index]?.date_of_birth && (
-                      <p className="absolute text-red-500 text-sm mt-1 left-0">
-                        {errors.family_members[index].date_of_birth.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <Button
-                    type="button"
-                    onClick={() => remove(index)} // Remove family member
-                    className="mt-5 bg-red-500 hover:bg-red-600 text-white"
+            {/* start */}
+            {/* {fields.map((item, index) => (
+              <div
+                className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4"
+                key={item.id}
+              >
+                <div className="relative">
+                  <Label
+                    className="font-normal"
+                    htmlFor={`family_members[${index}].name`}
                   >
-                    Remove
-                  </Button>
+                    Family Member Name:<span className="text-red-500">*</span>
+                  </Label>
+                  <Controller
+                    name={`family_members[${index}].name`}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        id={`family_members[${index}].name`}
+                        className="mt-1"
+                        placeholder="Enter family member name"
+                      />
+                    )}
+                  />
+                  {errors.family_members?.[index]?.name && (
+                    <p className="absolute text-red-500 text-sm mt-1 left-0">
+                      {errors.family_members[index].name.message}
+                    </p>
+                  )}
                 </div>
-              ))}
 
-              {/* Add Family Member Button */}
-              <div className="flex justify-start mt-4">
+                <div className="relative">
+                  <Label
+                    className="font-normal"
+                    htmlFor={`family_members[${index}].relation`}
+                  >
+                    Relation:<span className="text-red-500">*</span>
+                  </Label>
+                  <Controller
+                    name={`family_members[${index}].relation`}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        id={`family_members[${index}].relation`}
+                        className="mt-1"
+                        placeholder="Enter relation"
+                      />
+                    )}
+                  />
+                  {errors.family_members?.[index]?.relation && (
+                    <p className="absolute text-red-500 text-sm mt-1 left-0">
+                      {errors.family_members[index].relation.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="relative">
+                  <Label
+                    className="font-normal"
+                    htmlFor={`family_members[${index}].date_of_birth`}
+                  >
+                    Date of Birth:<span className="text-red-500">*</span>
+                  </Label>
+                  <Controller
+                    name={`family_members[${index}].date_of_birth`}
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        id={`family_members[${index}].date_of_birth`}
+                        className="dark:bg-[var(--foreground)] mt-1 text-sm w-full p-2 pr-3 rounded-md border border-1"
+                        type="date"
+                        placeholder="Enter date of birth"
+                      />
+                    )}
+                  />
+                  {errors.family_members?.[index]?.date_of_birth && (
+                    <p className="absolute text-red-500 text-sm mt-1 left-0">
+                      {errors.family_members[index].date_of_birth.message}
+                    </p>
+                  )}
+                </div>
+
                 <Button
                   type="button"
-                  onClick={() =>
-                    append({ name: "", relation: "", date_of_birth: "" })
-                  } // Add new family member
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={() => remove(index)} // Remove family member
+                  className="mt-5 bg-red-500 hover:bg-red-600 text-white"
                 >
-                  Add Family Member
+                  Remove
                 </Button>
               </div>
+            ))} */}
+
             {/* </div> */}
             {/* end */}
             {/* row ends */}
-              <div className="w-full gap-4 mt-4 flex justify-end items-center">
-                <Button
-                  type="button"
-                  className="dark:text-white shadow-xl bg-red-600 hover:bg-red-700"
-                  onClick={() => navigate("/clients")}
-                >
-                  Cancel
-                </Button>
+          </div>
+          <div className="px-5 mt-2 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
+            <div className="w-full pt-3 flex justify-start items-center">
+              <h2 className="text-lg  font-normal">Add Family Members</h2>
+            </div>
+            <Table className="mb-2 mt-3">
+              <TableCaption className="mb-2">
+                <div className="flex justify-end"></div>
+              </TableCaption>
+              <TableHeader className="dark:bg-background bg-gray-100  rounded-md">
+                <TableRow>
+                  <TableHead className="">Name</TableHead>{" "}
+                  <TableHead className="">relation</TableHead>{" "}
+                  <TableHead className="">date</TableHead>{" "}
+                  {/*removed w-[100px] from here */}
+                  <TableHead className="text-right">Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {fields &&
+                  fields.map((item, index) => (
+                    <TableRow
+                      key={item.id}
+                      className=" dark:border-b dark:border-gray-600"
+                    >
+                      <TableCell className="font-medium p-2">
+                        <div className="relative">
+                          {/* <Label
+                          className="font-normal"
+                          htmlFor={`family_members[${index}].name`}
+                        >
+                          Family Member Name:
+                          <span className="text-red-500">*</span>
+                        </Label> */}
+                          <Controller
+                            name={`family_members[${index}].name`}
+                            control={control}
+                            render={({ field }) => (
+                              <Input
+                                {...field}
+                                id={`family_members[${index}].name`}
+                                className="mt-1"
+                                placeholder="Enter family member name"
+                              />
+                            )}
+                          />
+                          {errors.family_members?.[index]?.name && (
+                            <p className="absolute text-red-500 text-sm mt-1 left-0">
+                              {errors.family_members[index].name.message}
+                            </p>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium p-2">
+                        <div className="relative">
+                          {/* <Label
+                          className="font-normal"
+                          htmlFor={`family_members[${index}].relation`}
+                        >
+                          Relation:<span className="text-red-500">*</span>
+                        </Label> */}
+                          <Controller
+                            name={`family_members[${index}].relation`}
+                            control={control}
+                            render={({ field }) => (
+                              <Input
+                                {...field}
+                                id={`family_members[${index}].relation`}
+                                className="mt-1"
+                                placeholder="Enter relation"
+                              />
+                            )}
+                          />
+                          {errors.family_members?.[index]?.relation && (
+                            <p className="absolute text-red-500 text-sm mt-1 left-0">
+                              {errors.family_members[index].relation.message}
+                            </p>
+                          )}
+                        </div>
+                      </TableCell>{" "}
+                      <TableCell className="font-medium p-2">
+                        <div className="relative">
+                          {/* <Label
+                          className="font-normal"
+                          htmlFor={`family_members[${index}].date_of_birth`}
+                        >
+                          Date of Birth:<span className="text-red-500">*</span>
+                        </Label> */}
+                          <Controller
+                            name={`family_members[${index}].date_of_birth`}
+                            control={control}
+                            render={({ field }) => (
+                              <input
+                                {...field}
+                                id={`family_members[${index}].date_of_birth`}
+                                className="dark:bg-[var(--foreground)] mt-1 text-sm w-full p-2 pr-3 rounded-md border border-1"
+                                type="date"
+                                placeholder="Enter date of birth"
+                              />
+                            )}
+                          />
+                          {errors.family_members?.[index]?.date_of_birth && (
+                            <p className="absolute text-red-500 text-sm mt-1 left-0">
+                              {
+                                errors.family_members[index].date_of_birth
+                                  .message
+                              }
+                            </p>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right p-2 pr-5">
+                        <Button
+                          type="button"
+                          onClick={() => remove(index)} // Remove family member
+                          className="mt-  bg-red-600 hover:bg-red-700 text-white"
+                        >
+                          Remove
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+            {/* Add Family Member Button */}
+            {/* <div className="flex"> */}
+            <div className="flex justify-start mt-2">
+              <Button
+                type="button"
+                onClick={() =>
+                  append({ name: "", relation: "", date_of_birth: "" })
+                } // Add new family member
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                +
+              </Button>
+            </div>
+            <div className="w-full gap-4 mt-4 flex justify-end items-center">
+              <Button
+                type="button"
+                className="dark:text-white shadow-xl bg-red-600 hover:bg-red-700"
+                onClick={() => navigate("/clients")}
+              >
+                Cancel
+              </Button>
 
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className=" dark:text-white  shadow-xl bg-green-600 hover:bg-green-700"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="animate-spin mr-2" /> {/* Spinner */}
-                      Updating...
-                    </>
-                  ) : (
-                    "Update"
-                  )}
-                </Button>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className=" dark:text-white  shadow-xl bg-green-600 hover:bg-green-700"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="animate-spin mr-2" /> {/* Spinner */}
+                    Updating...
+                  </>
+                ) : (
+                  "Update"
+                )}
+              </Button>
+            </div>
+            {/* </div> */}
           </div>
         </form>
-        </div>
       </div>
     </>
   );
