@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -27,31 +27,42 @@ const formSchema = z.object({
     .string()
     .email("Invalid email address")
     .max(100, "Email must be at max 100 characters")
-    .nonempty("Email is required"),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .max(100, "Password must be at max 100 characters"),
-  name: z
+    .nonempty("Email field is required"),
+  client_name: z
     .string()
     .min(2, "Name must be at least 2 characters")
     .max(100, "Name must be at max 100 characters")
     .regex(/^[A-Za-z\s\u0900-\u097F]+$/, "Name can only contain letters."), // Allow letters and spaces, including Marathi
-
-  // mobile: z.string().optional(),
-  // mobile: z
-  //   .string()
-  //   .regex(
-  //     /^\+(\d{1,3})\d{10}$/,
-  //     "Mobile number must include a valid country code and be followed by 10 digits."
-  //   )
-  //   .optional(),
-  mobile: z
+  office_address: z.string().optional(),
+  office_address_pincode: z
     .string()
-    .regex(/^\+(\d{1,2})(\d{10})?$/, "Mobile number must include 10 digits.")
+    .refine((val) => val === "" || /^\d{6}$/.test(val), {
+      message: "Pincode must be of 6 digits.",
+    })
     .optional(),
-  role: z.string().min(1, "Role field is required"),
-  active: z.coerce.number().optional(),
+  residential_address: z.string().optional(),
+  residential_address_pincode: z
+    .string()
+    .refine((val) => val === "" || /^\d{6}$/.test(val), {
+      message: "Pincode must be of 6 digits.",
+    })
+    .optional(),
+  mobile: z.string().refine((val) => /^[0-9]{10}$/.test(val), {
+    message: "Mobile number must contain exact 10 digits.",
+  }),
+  date_of_birth: z.string().min(1, "Date of birth field is required."),
+  family_members: z
+    .array(
+      z.object({
+        name: z
+          .string()
+          .min(2, " family member Name is required")
+          .max(100, "Name must be at max 100 characters"),
+        relation: z.string().min(2, "Relation is required"),
+        date_of_birth: z.string().min(1, "Date of birth is required"),
+      })
+    )
+    .optional(),
 });
 const Create = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -61,11 +72,14 @@ const Create = () => {
   const navigate = useNavigate();
   const defaultValues = {
     email: "",
-    password: "",
-    name: "",
-    mobile: "+91",
-    role: "",
-    active: "1",
+    client_name: "",
+    mobile: "",
+    date_of_birth: "",
+    office_address: "",
+    office_address_pincode: "",
+    residential_address: "",
+    residential_address_pincode: "",
+    family_members: [],
   };
 
   const {
@@ -76,9 +90,14 @@ const Create = () => {
     setValue,
   } = useForm({ resolver: zodResolver(formSchema), defaultValues });
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "family_members", // The name for the family members array
+  });
+
   const storeMutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post("/api/profiles", data, {
+      const response = await axios.post("/api/clients", data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Include the Bearer token
@@ -88,9 +107,9 @@ const Create = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries("users");
-      toast.success("User Created Successfully");
+      toast.success("Client details added Successfully");
       setIsLoading(false);
-      navigate("/users");
+      navigate("/clients");
     },
     onError: (error) => {
       setIsLoading(false);
@@ -103,29 +122,24 @@ const Create = () => {
               type: "manual",
               message: serverErrors.email[0], // The error message from the server
             });
-            // toast.error("The poo has already been taken.");
+            toast.error("Email has already been taken.");
           }
           if (serverErrors.mobile) {
             setError("mobile", {
               type: "manual",
               message: serverErrors.mobile[0], // The error message from the server
             });
-            // toast.error("The poo has already been taken.");
+            toast.error("mobile number has already been taken.");
           }
         } else {
-          toast.error("Failed to User details.");
+          toast.error("Failed to Add Client details.");
         }
       } else {
-        toast.error("Failed to add User details.");
+        toast.error("Failed to Add Client details.");
       }
     },
   });
   const onSubmit = (data) => {
-    if (data.mobile && data.mobile.length <= 3) {
-      // Checking if it's only the country code
-      data.mobile = ""; // Set the mobile to an empty string if only country code is entered
-    }
-
     setIsLoading(true);
     storeMutation.mutate(data);
   };
@@ -139,11 +153,11 @@ const Create = () => {
             <span className="">
               {/* Users */}
               <Button
-                onClick={() => navigate("/users")}
+                onClick={() => navigate("/clients")}
                 className="p-0 text-blue-700 text-sm font-light"
                 variant="link"
               >
-                Users
+                Clients
               </Button>
             </span>
             <span className="text-gray-400">/</span>
@@ -155,31 +169,31 @@ const Create = () => {
         {/* form style strat */}
         <div className="px-5 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
           <div className="w-full py-3 flex justify-start items-center">
-            <h2 className="text-lg  font-normal">Add Users</h2>
+            <h2 className="text-lg  font-normal">Personal Information</h2>
           </div>
           {/* row starts */}
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="w-full mb-8 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
+            <div className="w-full mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
               <div className="relative">
-                <Label className="font-normal" htmlFor="name">
-                  Name: <span className="text-red-500">*</span>
+                <Label className="font-normal" htmlFor="client_name">
+                  Client Name: <span className="text-red-500">*</span>
                 </Label>
                 <Controller
-                  name="name"
+                  name="client_name"
                   control={control}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      id="name"
+                      id="client_name"
                       className="mt-1"
                       type="text"
                       placeholder="Enter name"
                     />
                   )}
                 />
-                {errors.name && (
+                {errors.client_name && (
                   <p className="absolute text-red-500 text-sm mt-1 left-0">
-                    {errors.name.message}
+                    {errors.client_name.message}
                   </p>
                 )}
               </div>
@@ -207,59 +221,47 @@ const Create = () => {
                   </p>
                 )}
               </div>
-
               <div className="relative">
-                <Label className="font-normal" htmlFor="password">
-                  Password: <span className="text-red-500">*</span>
+                <Label className="font-normal" htmlFor="date_of_birth">
+                  Date of Birth:<span className="text-red-500">*</span>
                 </Label>
                 <Controller
-                  name="password"
+                  name="date_of_birth"
                   control={control}
                   render={({ field }) => (
-                    <Input
+                    <input
                       {...field}
-                      id="password"
-                      type="password"
-                      className="mt-1"
-                      placeholder="Enter password"
+                      id="date_of_birth"
+                      className="dark:bg-[var(--foreground)] mt-1 text-sm w-full p-2 pr-3 rounded-md border border-1"
+                      type="date"
+                      placeholder="Enter to date"
                     />
                   )}
                 />
-                {errors.password && (
+                {errors.date_of_birth && (
                   <p className="absolute text-red-500 text-sm mt-1 left-0">
-                    {errors.password.message}
+                    {errors.date_of_birth.message}
                   </p>
                 )}
               </div>
             </div>
             {/* row ends */}
             {/* row starts */}
-            <div className="w-full mb-8 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
+            <div className="w-full mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
               <div className="relative">
                 <Label className="font-normal" htmlFor="mobile">
-                  Mobile:
+                  Mobile:<span className="text-red-500">*</span>
                 </Label>
                 <Controller
                   name="mobile"
                   control={control}
                   render={({ field }) => (
-                    // <Input
-                    //   {...field}
-                    //   id="mobile"
-                    //   className="mt-1"
-                    //   type="number"
-                    //   placeholder="Enter mobile"
-                    // />
-                    <PhoneInput
+                    <Input
                       {...field}
-                      defaultCountry="IN" // Default country for the country code
-                      // value={mobile}
-                      // onChange={setMobile}
-                      inputStyle={{ minWidth: "18rem" }}
                       id="mobile"
-                      name="mobile"
-                      placeholder="Enter mobile number"
-                      className=" mt-1"
+                      className="mt-1"
+                      type="number"
+                      placeholder="Enter mobile"
                     />
                   )}
                 />
@@ -269,69 +271,225 @@ const Create = () => {
                   </p>
                 )}
               </div>
-              <div className="relative">
-                <Label className="font-normal" htmlFor="role">
-                  Role: <span className="text-red-500">*</span>
+            </div>
+            <div className="w-full py-3 flex justify-start items-center">
+              <h2 className="text-lg  font-normal">Address Information</h2>
+            </div>
+            <div className="w-full mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
+              <div className="relative col-span-2">
+                <Label className="font-normal" htmlFor="residential_address">
+                  Residential Address:
                 </Label>
                 <Controller
-                  name="role"
+                  name="residential_address"
                   control={control}
                   render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="mt-1">
-                        <SelectValue className="" placeholder="Select role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel className="">Select role</SelectLabel>
-                          <SelectItem value="admin">Admin</SelectItem>
-                          <SelectItem value="member">Member</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      {...field}
+                      id="residential_address"
+                      className="mt-1"
+                      type="text"
+                      placeholder="Enter residential address"
+                    />
                   )}
                 />
-                {errors.role && (
+                {errors.residential_address && (
                   <p className="absolute text-red-500 text-sm mt-1 left-0">
-                    {errors.role.message}
+                    {errors.residential_address.message}
                   </p>
                 )}
               </div>
               <div className="relative">
-                <Label className="font-normal" htmlFor="active">
-                  Active: <span className="text-red-500">*</span>
+                <Label
+                  className="font-normal"
+                  htmlFor="residential_address_pincode"
+                >
+                  Pincode:
                 </Label>
                 <Controller
-                  name="active"
+                  name="residential_address_pincode"
                   control={control}
                   render={({ field }) => (
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Select Status</SelectLabel>
-                          <SelectItem value={String(1)}>Active</SelectItem>
-                          <SelectItem value={String(0)}>Inactive</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      {...field}
+                      id="residential_address_pincode"
+                      className="mt-1"
+                      type="number"
+                      placeholder="Enter pincode"
+                    />
                   )}
                 />
-                {errors.active && (
+                {errors.residential_address_pincode && (
                   <p className="absolute text-red-500 text-sm mt-1 left-0">
-                    {errors.active.message}
+                    {errors.residential_address_pincode.message}
                   </p>
                 )}
               </div>
             </div>
+            <div className="w-full mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
+              <div className="relative col-span-2">
+                <Label className="font-normal" htmlFor="office_address">
+                  Office Address:
+                </Label>
+                <Controller
+                  name="office_address"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      id="office_address"
+                      className="mt-1"
+                      type="text"
+                      placeholder="Enter office address"
+                    />
+                  )}
+                />
+                {errors.office_address && (
+                  <p className="absolute text-red-500 text-sm mt-1 left-0">
+                    {errors.office_address.message}
+                  </p>
+                )}
+              </div>
+              <div className="relative">
+                <Label className="font-normal" htmlFor="office_address_pincode">
+                  Pincode:
+                </Label>
+                <Controller
+                  name="office_address_pincode"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      id="office_address_pincode"
+                      className="mt-1"
+                      type="number"
+                      placeholder="Enter pincode"
+                    />
+                  )}
+                />
+                {errors.office_address_pincode && (
+                  <p className="absolute text-red-500 text-sm mt-1 left-0">
+                    {errors.office_address_pincode.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* start */}
+            {fields.map((item, index) => (
+              <div
+                className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4"
+                key={item.id}
+              >
+                <div className="relative">
+                  <Label
+                    className="font-normal"
+                    htmlFor={`family_members[${index}].name`}
+                  >
+                    Family Member Name:<span className="text-red-500">*</span>
+                  </Label>
+                  <Controller
+                    name={`family_members[${index}].name`}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        id={`family_members[${index}].name`}
+                        className="mt-1"
+                        placeholder="Enter family member name"
+                      />
+                    )}
+                  />
+                  {errors.family_members?.[index]?.name && (
+                    <p className="absolute text-red-500 text-sm mt-1 left-0">
+                      {errors.family_members[index].name.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="relative">
+                  <Label
+                    className="font-normal"
+                    htmlFor={`family_members[${index}].relation`}
+                  >
+                    Relation:<span className="text-red-500">*</span>
+                  </Label>
+                  <Controller
+                    name={`family_members[${index}].relation`}
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        id={`family_members[${index}].relation`}
+                        className="mt-1"
+                        placeholder="Enter relation"
+                      />
+                    )}
+                  />
+                  {errors.family_members?.[index]?.relation && (
+                    <p className="absolute text-red-500 text-sm mt-1 left-0">
+                      {errors.family_members[index].relation.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="relative">
+                  <Label
+                    className="font-normal"
+                    htmlFor={`family_members[${index}].date_of_birth`}
+                  >
+                    Date of Birth:<span className="text-red-500">*</span>
+                  </Label>
+                  <Controller
+                    name={`family_members[${index}].date_of_birth`}
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        id={`family_members[${index}].date_of_birth`}
+                        className="dark:bg-[var(--foreground)] mt-1 text-sm w-full p-2 pr-3 rounded-md border border-1"
+                        type="date"
+                        placeholder="Enter date of birth"
+                      />
+                    )}
+                  />
+                  {errors.family_members?.[index]?.date_of_birth && (
+                    <p className="absolute text-red-500 text-sm mt-1 left-0">
+                      {errors.family_members[index].date_of_birth.message}
+                    </p>
+                  )}
+                </div>
+
+                <Button
+                  type="button"
+                  onClick={() => remove(index)} // Remove family member
+                  className="mt-5 bg-red-500 hover:bg-red-600 text-white"
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
+
+            {/* Add Family Member Button */}
+            <div className="flex justify-start mt-4">
+              <Button
+                type="button"
+                onClick={() =>
+                  append({ name: "", relation: "", date_of_birth: "" })
+                } // Add new family member
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Add Family Member
+              </Button>
+            </div>
+            {/* </div> */}
+            {/* end */}
             {/* row ends */}
             <div className="w-full gap-4 mt-4 flex justify-end items-center">
               <Button
                 type="button"
                 className="dark:text-white shadow-xl bg-red-600 hover:bg-red-700"
-                onClick={() => navigate("/users")}
+                onClick={() => navigate("/clients")}
               >
                 Cancel
               </Button>

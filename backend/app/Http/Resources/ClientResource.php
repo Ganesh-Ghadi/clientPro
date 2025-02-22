@@ -19,12 +19,14 @@ class ClientResource extends JsonResource
             'client_name' => $this->client_name,
             'email' => $this->email,
             'date_of_birth' => $this->date_of_birth,
+            'mobile' => $this->mobile,
             'residential_address' => $this->residential_address,
             'residential_address_pincode' => $this->residential_address_pincode,
             'office_address' => $this->office_address,
             'office_address_pincode' => $this->office_address_pincode,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'Family_members' => $this->familyMembers,
         ];
     }
 }

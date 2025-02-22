@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('client_name', 100)->nullable();
             $table->string('email', 50)->nullable();
+            $table->string('mobile', 15)->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('residential_address')->nullable();
             $table->integer('residential_address_pincode')->nullable();
