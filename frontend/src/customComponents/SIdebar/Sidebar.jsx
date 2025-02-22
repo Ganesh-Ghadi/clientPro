@@ -56,6 +56,11 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           path: "/mediclaim_insurances",
           logo: <ReceiptText size={16} />,
         },
+        {
+          name: "Term Plans",
+          path: "/term_plans",
+          logo: <HandCoins size={16} />,
+        },
       ],
     },
     {
@@ -102,6 +107,11 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           name: "Mediclaim Insurances",
           path: "/mediclaim_insurances",
           logo: <ReceiptText size={16} />,
+        },
+        {
+          name: "Term Plans",
+          path: "/term_plans",
+          logo: <HandCoins size={16} />,
         },
       ],
     },

@@ -52,7 +52,7 @@ class TermPlansController extends BaseController
         $termPlan = new TermPlan();
         $termPlan->client_id = $request->input("client_id");
         $termPlan->term_company_name = $request->input("term_company_name");
-        $termPlan->have_mediclaim_insurance = $request->input("have_mediclaim_insurance");
+        $termPlan->have_term_plan = $request->input("have_term_plan");
         $termPlan->broker_name = $request->input("broker_name");
         $termPlan->proposal_date = $request->input("proposal_date");
         $termPlan->end_date = $request->input("end_date");
@@ -90,8 +90,8 @@ class TermPlansController extends BaseController
         }
         
         $termPlan->client_id = $request->input("client_id");
-        $termPlan->company_name = $request->input("company_name");
-        $termPlan->have_mediclaim_insurance = $request->input("have_mediclaim_insurance");
+        $termPlan->term_company_name = $request->input("term_company_name");
+        $termPlan->have_term_plan = $request->input("have_term_plan");
         $termPlan->broker_name = $request->input("broker_name");
         $termPlan->proposal_date = $request->input("proposal_date");
         $termPlan->end_date = $request->input("end_date");

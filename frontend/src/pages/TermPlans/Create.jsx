@@ -25,7 +25,7 @@ import { toast } from "sonner";
 const formSchema = z.object({
   // devta_name: z.string().min(2, "Name must be at least 2 characters"),
   client_id: z.coerce.number().min(1, "client field is required."),
-  company_name: z
+  term_company_name: z
     .string()
     .min(2, "Company name must be at least 2 characters")
     .max(100, "Company name must be at max 100 characters")
@@ -57,7 +57,7 @@ const Create = () => {
   const navigate = useNavigate();
   const defaultValues = {
     client_id: "",
-    company_name: "",
+    term_company_name: "",
     broker_name: "",
     proposal_date: "",
     company_name: "",
@@ -97,7 +97,7 @@ const Create = () => {
 
   const storeMutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post("/api/mediclaim_insurances", data, {
+      const response = await axios.post("/api/term_plans", data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Include the Bearer token
@@ -106,10 +106,10 @@ const Create = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries("mediclaim_insurances");
-      toast.success("Mediclaim Insurance Added Successfully");
+      queryClient.invalidateQueries("term_plans");
+      toast.success("Term Plan Added Successfully");
       setIsLoading(false);
-      navigate("/mediclaim_insurances");
+      navigate("/term_plans");
     },
     onError: (error) => {
       setIsLoading(false);
@@ -125,10 +125,10 @@ const Create = () => {
             // toast.error("The poo has already been taken.");
           }
         } else {
-          toast.error("Failed to add Mediclaim Insurance details.");
+          toast.error("Failed to add Term Plan details.");
         }
       } else {
-        toast.error("Failed to add Mediclaim Insurance details.");
+        toast.error("Failed to add Term Plan details.");
       }
     },
   });
@@ -145,11 +145,11 @@ const Create = () => {
           <div className="flex items-center space-x-2 text-gray-700">
             <span className="">
               <Button
-                onClick={() => navigate("/mediclaim_insurances")}
+                onClick={() => navigate("/term_plans")}
                 className="p-0 text-blue-700 text-sm font-light"
                 variant="link"
               >
-                Mediclaim Insurances
+                Term Plans
               </Button>
             </span>
             <span className="text-gray-400">/</span>
@@ -161,7 +161,7 @@ const Create = () => {
         {/* form style strat */}
         <div className="px-5 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
           <div className="w-full py-3 flex justify-start items-center">
-            <h2 className="text-lg  font-normal">Add Mediclaim Insurance</h2>
+            <h2 className="text-lg  font-normal">Add Term Plan</h2>
           </div>
           {/* row starts */}
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -199,25 +199,25 @@ const Create = () => {
                 )}
               </div>
               <div className="relative">
-                <Label className="font-normal" htmlFor="company_name">
+                <Label className="font-normal" htmlFor="term_company_name">
                   Company Name: <span className="text-red-500">*</span>
                 </Label>
                 <Controller
-                  name="company_name"
+                  name="term_company_name"
                   control={control}
                   render={({ field }) => (
                     <Input
                       {...field}
-                      id="company_name"
+                      id="term_company_name"
                       className="mt-1"
                       type="text"
                       placeholder="Enter company name"
                     />
                   )}
                 />
-                {errors.company_name && (
+                {errors.term_company_name && (
                   <p className="absolute text-red-500 text-sm mt-1 left-0">
-                    {errors.company_name.message}
+                    {errors.term_company_name.message}
                   </p>
                 )}
               </div>
@@ -382,7 +382,7 @@ const Create = () => {
               <Button
                 type="button"
                 className="dark:text-white shadow-xl bg-red-600 hover:bg-red-700"
-                onClick={() => navigate("/mediclaim_insurances")}
+                onClick={() => navigate("/term_plans")}
               >
                 Cancel
               </Button>

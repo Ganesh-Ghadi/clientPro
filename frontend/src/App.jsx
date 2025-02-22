@@ -25,6 +25,9 @@ import UpdateDevtas from "./pages/Devtas/Update";
 import MediclaimInsurances from "./pages/MediclaimInsurances/index";
 import CreateMediclaimInsurances from "./pages/MediclaimInsurances/Create";
 import UpdateMediclaimInsurances from "./pages/MediclaimInsurances/Update";
+import TermPlans from "./pages/TermPlans/index";
+import CreateTermPlans from "./pages/TermPlans/Create";
+import UpdateTermPlans from "./pages/TermPlans/Update";
 import AnteshteeAmounts from "./pages/AnteshteeAmounts/index";
 import CreateAnteshtee from "./pages/AnteshteeAmounts/Create";
 import UpdateAnteshtee from "./pages/AnteshteeAmounts/Update";
@@ -100,7 +103,10 @@ const App = () => {
           <Route
             path="/mediclaim_insurances/:id/edit"
             element={<UpdateMediclaimInsurances />}
-          />
+          />{" "}
+          <Route path="/term_plans" element={<TermPlans />} />
+          <Route path="/term_plans/create" element={<CreateTermPlans />} />
+          <Route path="/term_plans/:id/edit" element={<UpdateTermPlans />} />
           <Route path="/anteshtees" element={<AnteshteeAmounts />} />
           <Route path="/anteshtees/create" element={<CreateAnteshtee />} />
           <Route path="/anteshtees/:id/edit" element={<UpdateAnteshtee />} />

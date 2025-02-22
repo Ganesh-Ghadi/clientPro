@@ -170,10 +170,10 @@ const Update = () => {
             // toast.error("The poo has already been taken.");
           }
         } else {
-          toast.error("Failed to add Mediclaim insurance details.");
+          toast.error("Failed to update Mediclaim insurance details.");
         }
       } else {
-        toast.error("Failed to add Mediclaim insurance details.");
+        toast.error("Failed to update Mediclaim insurance details.");
       }
     },
   });

@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\ReportsController;
 use App\Http\Controllers\Api\ProfilesController;
 use App\Http\Controllers\Api\ReceiptsController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\TermPlansController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\PoojaDatesController;
 use App\Http\Controllers\Api\PoojaTypesController;
@@ -29,6 +30,7 @@ Route::group(['middleware'=>['auth:sanctum', 'permission']], function(){
   
    Route::resource('clients', ClientsController::class);  
    Route::resource('mediclaim_insurances', MediclaimInsurancesController::class);  
+   Route::resource('term_plans', TermPlansController::class);  
    Route::get('/all_clients', [ClientsController::class, 'allClients'])->name("clients.all");
 
    Route::resource('profiles', ProfilesController::class);  
