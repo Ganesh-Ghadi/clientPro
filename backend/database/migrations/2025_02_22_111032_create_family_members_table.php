@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('family_members', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id'); 
-            $table->string('famiy_member_name', 100)->nullable();
+            $table->string('family_member_name', 100)->nullable();
             $table->string('relation', 100)->nullable();
-            $table->date('famiy_member_dob')->nullable();
+            $table->date('family_member_dob')->nullable();
             $table->timestamps();
         });
     }

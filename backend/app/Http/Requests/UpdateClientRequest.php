@@ -28,6 +28,10 @@ class UpdateClientRequest extends FormRequest
                 'required',
                 'unique:clients,email,' . $this->route('client'), 
             ],
+            'client_name' => [
+                'required',
+                'unique:clients,client_name,' . $this->route('client'), 
+            ],
         ];
     }
 

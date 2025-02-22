@@ -215,14 +215,14 @@ class ClientsController extends BaseController
     }
 
     /**
-     * Fetch All Devta.
+     * Fetch All Clients.
      */
-    public function alldevtas(): JsonResponse
+    public function allClients(): JsonResponse
     {
-        $devtas = Devta::all();
+        $client = Client::all();
 
-        return $this->sendResponse(["Devtas"=>DevtaResource::collection($devtas),
-        ], "Devtas retrieved successfully");
+        return $this->sendResponse(["Clients"=>ClientResource::collection($client),
+        ], "Clients retrieved successfully");
 
     }
 }

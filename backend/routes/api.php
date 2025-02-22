@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\ReceiptHeadsController;
 use App\Http\Controllers\Api\ReceiptTypesController;
 use App\Http\Controllers\Api\DenominationsController;
 use App\Http\Controllers\Api\AnteshteeAmountsController;
+use App\Http\Controllers\Api\MediclaimInsurancesController;
 
 
 
@@ -27,6 +28,7 @@ Route::post('/login', [UserController::class, 'login']);
 Route::group(['middleware'=>['auth:sanctum', 'permission']], function(){
   
    Route::resource('clients', ClientsController::class);  
+   Route::resource('mediclaim_insurances', MediclaimInsurancesController::class);  
    Route::resource('profiles', ProfilesController::class);  
    Route::resource('denominations', DenominationsController::class);  
    Route::resource('receipts', ReceiptsController::class);  

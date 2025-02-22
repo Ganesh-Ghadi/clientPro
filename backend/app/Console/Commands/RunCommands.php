@@ -21,7 +21,6 @@ class RunCommands extends Command
         'optimize',      
         'permissions:generate',      
         'db:seed',  
-        'optimize',     
     ];
 
     foreach ($commands as $command) {

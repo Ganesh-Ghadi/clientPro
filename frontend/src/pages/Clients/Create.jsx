@@ -141,6 +141,13 @@ const Create = () => {
             });
             toast.error("mobile number has already been taken.");
           }
+          if (serverErrors.mobile) {
+            setError("client_name", {
+              type: "manual",
+              message: serverErrors.client_name[0], // The error message from the server
+            });
+            toast.error("Client Name has already been taken.");
+          }
         } else {
           toast.error("Failed to Add Client details.");
         }
@@ -167,6 +174,7 @@ const Create = () => {
                   onClick={() => navigate("/clients")}
                   className="p-0 text-blue-700 text-sm font-light"
                   variant="link"
+                  type="button"
                 >
                   Clients
                 </Button>
@@ -482,7 +490,6 @@ const Create = () => {
             {/* </div> */}
             {/* end */}
             {/* row ends */}
-           
           </div>
           <div className="px-5 mt-2 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
             <div className="w-full pt-3 flex justify-start items-center">
@@ -646,7 +653,6 @@ const Create = () => {
             </div>
             {/* </div> */}
           </div>
-          
         </form>
       </div>
     </>

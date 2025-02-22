@@ -25,6 +25,7 @@ class StoreClientRequest extends FormRequest
     {
         return [
             "email" => ['required', 'unique:clients,email'],
+            "client_name" => ['required', 'unique:clients,client_name'],
         ];
     }
 

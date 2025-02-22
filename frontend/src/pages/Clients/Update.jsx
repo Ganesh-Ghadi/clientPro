@@ -196,6 +196,13 @@ const Update = () => {
             });
             toast.error("Mobile number has already been taken.");
           }
+          if (serverErrors.mobile) {
+            setError("client_name", {
+              type: "manual",
+              message: serverErrors.client_name[0], // The error message from the server
+            });
+            toast.error("Client Name has already been taken.");
+          }
         } else {
           toast.error("Failed to update Client details.");
         }
@@ -222,6 +229,7 @@ const Update = () => {
                   onClick={() => navigate("/clients")}
                   className="p-0 text-blue-700 text-sm font-light"
                   variant="link"
+                  type="button"
                 >
                   Clients
                 </Button>
