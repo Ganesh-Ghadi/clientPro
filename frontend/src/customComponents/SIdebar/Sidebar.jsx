@@ -27,6 +27,7 @@ import {
   ClipboardMinus,
   Calendar,
   FileKey2,
+  Landmark,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -48,7 +49,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
       logo: <UsersRound size={16} />,
     },
     {
-      name: "Services",
+      name: "Categories",
       path: "#",
       logo: <SquareUserRound size={16} />,
       children: [
@@ -66,6 +67,16 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           name: "LIC",
           path: "/lics",
           logo: <FileKey2 size={16} />,
+        },
+        // {
+        //   name: "Other",
+        //   path: "/other_categories",
+        //   logo: <ClipboardPlus size={16} />,
+        // },
+        {
+          name: "Loans",
+          path: "/loans",
+          logo: <Landmark size={16} />,
         },
       ],
     },

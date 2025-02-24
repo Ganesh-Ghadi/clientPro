@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LICsController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\LoansController;
 use App\Http\Controllers\Api\RolesController;
 use App\Http\Controllers\Api\DevtasController;
 use App\Http\Controllers\Api\ClientsController;
@@ -32,6 +33,7 @@ Route::group(['middleware'=>['auth:sanctum', 'permission']], function(){
    Route::resource('clients', ClientsController::class);  
    Route::resource('mediclaim_insurances', MediclaimInsurancesController::class);  
    Route::resource('term_plans', TermPlansController::class);  
+   Route::resource('loans', LoansController::class);  
    Route::resource('lics', LICsController::class);  
    Route::get('/all_clients', [ClientsController::class, 'allClients'])->name("clients.all");
    Route::resource('profiles', ProfilesController::class);  

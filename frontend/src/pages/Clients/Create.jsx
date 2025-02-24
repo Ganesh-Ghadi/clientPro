@@ -72,9 +72,20 @@ const formSchema = z.object({
       z.object({
         name: z
           .string()
-          .min(1, " family member Name is required")
-          .max(100, "Name must be at max 100 characters"),
-        relation: z.string().min(1, "Relation is required"),
+          .min(1, "Name field is required")
+          .max(100, "Name must be at max 100 characters")
+          .regex(
+            /^[A-Za-z\s\u0900-\u097F]+$/,
+            "Name can only contain letters."
+          ),
+        relation: z
+          .string()
+          .min(1, "Relation field is required")
+          .max(100, "Relation must be at max 100 characters")
+          .regex(
+            /^[A-Za-z\s\u0900-\u097F]+$/,
+            "Relation can only contain letters."
+          ),
         date_of_birth: z.string().min(1, "Date of birth is required"),
       })
     )
@@ -509,15 +520,15 @@ const Create = () => {
             <div className="w-full pt-3 flex justify-start items-center">
               <h2 className="text-lg  font-normal">Add Family Members</h2>
             </div>
-            <Table className="mb-2 mt-3">
+            <Table className=" mt-3">
               <TableCaption className="mb-2">
                 <div className="flex justify-end"></div>
               </TableCaption>
               <TableHeader className="dark:bg-background bg-gray-100  rounded-md">
                 <TableRow>
                   <TableHead className="">Name</TableHead>{" "}
-                  <TableHead className="">relation</TableHead>{" "}
-                  <TableHead className="">date</TableHead>{" "}
+                  <TableHead className="">Relation</TableHead>{" "}
+                  <TableHead className="">Date</TableHead>{" "}
                   {/*removed w-[100px] from here */}
                   <TableHead className="text-right">Action</TableHead>
                 </TableRow>
@@ -630,7 +641,7 @@ const Create = () => {
             </Table>
             {/* Add Family Member Button */}
             {/* <div className="flex"> */}
-            <div className="flex justify-start mt-2">
+            <div className="flex justify-start">
               <Button
                 type="button"
                 onClick={() =>

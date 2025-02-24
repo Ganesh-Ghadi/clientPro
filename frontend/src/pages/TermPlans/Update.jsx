@@ -125,13 +125,16 @@ const Update = () => {
 
   useEffect(() => {
     if (editTerm) {
-      setValue("client_id", editTerm.TermPlan?.client_id);
-      setValue("term_company_name", editTerm.TermPlan?.term_company_name);
-      setValue("broker_name", editTerm.TermPlan?.broker_name);
-      setValue("proposal_date", editTerm.TermPlan?.proposal_date);
-      setValue("premium_payment_mode", editTerm.TermPlan?.premium_payment_mode);
-      setValue("sum_insured", editTerm.TermPlan?.sum_insured);
-      setValue("end_date", editTerm.TermPlan?.end_date);
+      setValue("client_id", editTerm.TermPlan?.client_id || "");
+      setValue("term_company_name", editTerm.TermPlan?.term_company_name || "");
+      setValue("broker_name", editTerm.TermPlan?.broker_name || "");
+      setValue("proposal_date", editTerm.TermPlan?.proposal_date || "");
+      setValue(
+        "premium_payment_mode",
+        editTerm.TermPlan?.premium_payment_mode || ""
+      );
+      setValue("sum_insured", editTerm.TermPlan?.sum_insured || "");
+      setValue("end_date", editTerm.TermPlan?.end_date || "");
     }
   }, [editTerm, setValue]);
 

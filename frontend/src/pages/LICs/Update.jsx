@@ -23,7 +23,7 @@ import { toast } from "sonner";
 
 const formSchema = z.object({
   // devta_name: z.string().min(2, "Name must be at least 2 characters"),
-  client_id: z.coerce.number().min(1, "client field is required."),
+  client_id: z.coerce.number().min(1, "Client field is required."),
   company_name: z
     .string()
     .min(2, "Company name must be at least 2 characters")
