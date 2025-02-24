@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mediclaim_insurances', function (Blueprint $table) {
+        Schema::create('l_i_c_s', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id'); 
             $table->string('company_name', 100)->nullable();
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mediclaim_insurances');
+        Schema::dropIfExists('l_i_c_s');
     }
 };

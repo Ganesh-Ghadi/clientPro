@@ -102,14 +102,14 @@ const Update = () => {
   } = useForm({ resolver: zodResolver(formSchema), defaultValues });
 
   const {
-    data: editMediclaim,
-    isLoading: isEditMediclaimDataLoading,
-    isError: isEditMediclaimDataError,
+    data: editLIC,
+    isLoading: isEditLICDataLoading,
+    isError: isEditLICDataError,
   } = useQuery({
-    queryKey: ["editMediclaimInsurance", id], // This is the query key
+    queryKey: ["editLIC", id], // This is the query key
     queryFn: async () => {
       try {
-        const response = await axios.get(`/api/mediclaim_insurances/${id}`, {
+        const response = await axios.get(`/api/lics/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -124,52 +124,33 @@ const Update = () => {
   });
 
   useEffect(() => {
-    if (editMediclaim) {
-      setValue("client_id", editMediclaim.MediclaimInsurance?.client_id || "");
-      setValue(
-        "company_name",
-        editMediclaim.MediclaimInsurance?.company_name || ""
-      );
-      setValue(
-        "broker_name",
-        editMediclaim.MediclaimInsurance?.broker_name || ""
-      );
-      setValue(
-        "proposal_date",
-        editMediclaim.MediclaimInsurance?.proposal_date || ""
-      );
-      setValue(
-        "premium_payment_mode",
-        editMediclaim.MediclaimInsurance?.premium_payment_mode || ""
-      );
-      setValue(
-        "sum_insured",
-        editMediclaim.MediclaimInsurance?.sum_insured || ""
-      );
-      setValue("end_date", editMediclaim.MediclaimInsurance?.end_date || "");
+    if (editLIC) {
+      setValue("client_id", editLIC.LIC?.client_id || "");
+      setValue("company_name", editLIC.LIC?.company_name || "");
+      setValue("broker_name", editLIC.LIC?.broker_name || "");
+      setValue("proposal_date", editLIC.LIC?.proposal_date || "");
+      setValue("premium_payment_mode", editLIC.LIC?.premium_payment_mode || "");
+      setValue("sum_insured", editLIC.LIC?.sum_insured || "");
+      setValue("end_date", editLIC.LIC?.end_date || "");
     }
-  }, [editMediclaim, setValue]);
+  }, [editLIC, setValue]);
 
   const updateMutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(
-        `/api/mediclaim_insurances/${id}`,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Include the Bearer token
-          },
-        }
-      );
+      const response = await axios.put(`/api/lics/${id}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Include the Bearer token
+        },
+      });
       return response.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries("mediclaim_insurances");
+      queryClient.invalidateQueries("lics");
 
-      toast.success("Mediclaim Insurance Updated Successfully");
+      toast.success("LIC details Updated Successfully");
       setIsLoading(false);
-      navigate("/mediclaim_insurances");
+      navigate("/lics");
     },
     onError: (error) => {
       setIsLoading(false);
@@ -185,10 +166,10 @@ const Update = () => {
             // toast.error("The poo has already been taken.");
           }
         } else {
-          toast.error("Failed to update Mediclaim insurance details.");
+          toast.error("Failed to update LIC details.");
         }
       } else {
-        toast.error("Failed to update Mediclaim insurance details.");
+        toast.error("Failed to update LIC details.");
       }
     },
   });
@@ -209,7 +190,7 @@ const Update = () => {
                 className="p-0 text-blue-700 text-sm font-light"
                 variant="link"
               >
-                Mediclaim Insurances
+                LICs
               </Button>
             </span>
             <span className="text-gray-400">/</span>
@@ -221,7 +202,7 @@ const Update = () => {
         {/* form style strat */}
         <div className="px-5 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
           <div className="w-full py-3 flex justify-start items-center">
-            <h2 className="text-lg  font-normal">Edit Mediclaim Insurance</h2>
+            <h2 className="text-lg  font-normal">Edit LIC</h2>
           </div>
           {/* row starts */}
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -442,7 +423,7 @@ const Update = () => {
               <Button
                 type="button"
                 className="dark:text-white shadow-xl bg-red-600 hover:bg-red-700"
-                onClick={() => navigate("/mediclaim_insurances")}
+                onClick={() => navigate("/lics")}
               >
                 Cancel
               </Button>

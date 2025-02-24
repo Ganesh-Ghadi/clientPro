@@ -52,7 +52,6 @@ class MediclaimInsurancesController extends BaseController
         $mediclaimInsurance = new MediclaimInsurance();
         $mediclaimInsurance->client_id = $request->input("client_id");
         $mediclaimInsurance->company_name = $request->input("company_name");
-        $mediclaimInsurance->have_mediclaim_insurance = $request->input("have_mediclaim_insurance");
         $mediclaimInsurance->broker_name = $request->input("broker_name");
         $mediclaimInsurance->proposal_date = $request->input("proposal_date");
         $mediclaimInsurance->end_date = $request->input("end_date");
@@ -91,7 +90,6 @@ class MediclaimInsurancesController extends BaseController
         
         $mediclaimInsurance->client_id = $request->input("client_id");
         $mediclaimInsurance->company_name = $request->input("company_name");
-        $mediclaimInsurance->have_mediclaim_insurance = $request->input("have_mediclaim_insurance");
         $mediclaimInsurance->broker_name = $request->input("broker_name");
         $mediclaimInsurance->proposal_date = $request->input("proposal_date");
         $mediclaimInsurance->end_date = $request->input("end_date");

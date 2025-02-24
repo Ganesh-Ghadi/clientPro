@@ -18,7 +18,6 @@ class MediclaimInsuranceResource extends JsonResource
             'id'                => $this->id,
             'client_id'         => $this->client_id,
             'client_name'         => $this->client ? $this->client->client_name : "",
-            'have_mediclaim_insurance'    => $this->have_mediclaim_insurance,
             'company_name'      => $this->company_name,
             'broker_name'       => $this->broker_name,
             'proposal_date'     => $this->proposal_date,

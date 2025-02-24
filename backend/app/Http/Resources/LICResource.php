@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TermPlanResource extends JsonResource
+class LICResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,7 +18,7 @@ class TermPlanResource extends JsonResource
             'id'                => $this->id,
             'client_id'         => $this->client_id,
             'client_name'         => $this->client ? $this->client->client_name : "",
-            'term_company_name'      => $this->term_company_name,
+            'company_name'      => $this->company_name,
             'broker_name'       => $this->broker_name,
             'proposal_date'     => $this->proposal_date,
             'end_date'     => $this->end_date,

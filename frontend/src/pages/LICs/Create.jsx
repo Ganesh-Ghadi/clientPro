@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
-
+import DatePicker from "react-multi-date-picker";
+import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import {
   Select,
   SelectContent,
@@ -17,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -51,15 +52,12 @@ const formSchema = z.object({
     .max(100, "Premium payment mode field must be at max 100 characters"),
   end_date: z.string().optional(),
 });
-
-const Update = () => {
+const Create = () => {
   const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
-  const { id } = useParams();
   const user = JSON.parse(localStorage.getItem("user"));
   const token = user.token;
   const navigate = useNavigate();
-
   const defaultValues = {
     client_id: "",
     company_name: "",
@@ -97,79 +95,24 @@ const Update = () => {
     control,
     handleSubmit,
     formState: { errors },
-    setValue,
     setError,
   } = useForm({ resolver: zodResolver(formSchema), defaultValues });
 
-  const {
-    data: editMediclaim,
-    isLoading: isEditMediclaimDataLoading,
-    isError: isEditMediclaimDataError,
-  } = useQuery({
-    queryKey: ["editMediclaimInsurance", id], // This is the query key
-    queryFn: async () => {
-      try {
-        const response = await axios.get(`/api/mediclaim_insurances/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        return response.data?.data; // Return the fetched data
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    },
-    keepPreviousData: true, // Keep previous data until the new data is available
-  });
-
-  useEffect(() => {
-    if (editMediclaim) {
-      setValue("client_id", editMediclaim.MediclaimInsurance?.client_id || "");
-      setValue(
-        "company_name",
-        editMediclaim.MediclaimInsurance?.company_name || ""
-      );
-      setValue(
-        "broker_name",
-        editMediclaim.MediclaimInsurance?.broker_name || ""
-      );
-      setValue(
-        "proposal_date",
-        editMediclaim.MediclaimInsurance?.proposal_date || ""
-      );
-      setValue(
-        "premium_payment_mode",
-        editMediclaim.MediclaimInsurance?.premium_payment_mode || ""
-      );
-      setValue(
-        "sum_insured",
-        editMediclaim.MediclaimInsurance?.sum_insured || ""
-      );
-      setValue("end_date", editMediclaim.MediclaimInsurance?.end_date || "");
-    }
-  }, [editMediclaim, setValue]);
-
-  const updateMutation = useMutation({
+  const storeMutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(
-        `/api/mediclaim_insurances/${id}`,
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Include the Bearer token
-          },
-        }
-      );
+      const response = await axios.post("/api/lics", data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Include the Bearer token
+        },
+      });
       return response.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries("mediclaim_insurances");
-
-      toast.success("Mediclaim Insurance Updated Successfully");
+      queryClient.invalidateQueries("lics");
+      toast.success("LIC details Added Successfully");
       setIsLoading(false);
-      navigate("/mediclaim_insurances");
+      navigate("/lics");
     },
     onError: (error) => {
       setIsLoading(false);
@@ -185,16 +128,16 @@ const Update = () => {
             // toast.error("The poo has already been taken.");
           }
         } else {
-          toast.error("Failed to update Mediclaim insurance details.");
+          toast.error("Failed to add LIC details.");
         }
       } else {
-        toast.error("Failed to update Mediclaim insurance details.");
+        toast.error("Failed to add LIC details.");
       }
     },
   });
   const onSubmit = (data) => {
     setIsLoading(true);
-    updateMutation.mutate(data);
+    storeMutation.mutate(data);
   };
 
   return (
@@ -205,15 +148,15 @@ const Update = () => {
           <div className="flex items-center space-x-2 text-gray-700">
             <span className="">
               <Button
-                onClick={() => navigate("/mediclaim_insurances")}
+                onClick={() => navigate("/lics")}
                 className="p-0 text-blue-700 text-sm font-light"
                 variant="link"
               >
-                Mediclaim Insurances
+                LICs
               </Button>
             </span>
             <span className="text-gray-400">/</span>
-            <span className="dark:text-gray-300">Edit</span>
+            <span className="dark:text-gray-300">Add</span>
           </div>
         </div>
         {/* breadcrumb ends */}
@@ -221,7 +164,7 @@ const Update = () => {
         {/* form style strat */}
         <div className="px-5 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
           <div className="w-full py-3 flex justify-start items-center">
-            <h2 className="text-lg  font-normal">Edit Mediclaim Insurance</h2>
+            <h2 className="text-lg  font-normal">Add LIC</h2>
           </div>
           {/* row starts */}
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -442,7 +385,7 @@ const Update = () => {
               <Button
                 type="button"
                 className="dark:text-white shadow-xl bg-red-600 hover:bg-red-700"
-                onClick={() => navigate("/mediclaim_insurances")}
+                onClick={() => navigate("/lics")}
               >
                 Cancel
               </Button>
@@ -455,10 +398,10 @@ const Update = () => {
                 {isLoading ? (
                   <>
                     <Loader2 className="animate-spin mr-2" /> {/* Spinner */}
-                    Updating...
+                    Submitting...
                   </>
                 ) : (
-                  "Update"
+                  "Submit"
                 )}
               </Button>
             </div>
@@ -469,4 +412,4 @@ const Update = () => {
   );
 };
 
-export default Update;
+export default Create;

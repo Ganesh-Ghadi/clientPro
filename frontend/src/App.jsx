@@ -19,6 +19,9 @@ import UpdateUsers from "./pages/Users/Update";
 import Clients from "./pages/Clients/index";
 import CreateClients from "./pages/Clients/Create";
 import UpdateClients from "./pages/Clients/Update";
+import LICs from "./pages/LICs/index";
+import CreateLICs from "./pages/LICs/Create";
+import UpdateLICs from "./pages/LICs/Update";
 import Devtas from "./pages/Devtas/index";
 import CreateDevtas from "./pages/Devtas/Create";
 import UpdateDevtas from "./pages/Devtas/Update";
@@ -89,6 +92,9 @@ const App = () => {
           <Route path="/clients" element={<Clients />} />
           <Route path="/clients/create" element={<CreateClients />} />
           <Route path="/clients/:id/edit" element={<UpdateClients />} />
+          <Route path="/lics" element={<LICs />} />
+          <Route path="/lics/create" element={<CreateLICs />} />
+          <Route path="/lics/:id/edit" element={<UpdateLICs />} />
           <Route path="/devtas" element={<Devtas />} />
           <Route path="/devtas/create" element={<CreateDevtas />} />
           <Route path="/devtas/:id/edit" element={<UpdateDevtas />} />

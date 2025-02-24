@@ -26,6 +26,7 @@ import {
   ClipboardPlus,
   ClipboardMinus,
   Calendar,
+  FileKey2,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -60,6 +61,11 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           name: "Term Plans",
           path: "/term_plans",
           logo: <HandCoins size={16} />,
+        },
+        {
+          name: "LIC",
+          path: "/lics",
+          logo: <FileKey2 size={16} />,
         },
       ],
     },

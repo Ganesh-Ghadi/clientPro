@@ -15,4 +15,5 @@ class Client extends Model
     public function mediclaimInsurances(){
         return $this->hasMany(MediclaimInsurance::class, 'client_id');
     }
+
 }
