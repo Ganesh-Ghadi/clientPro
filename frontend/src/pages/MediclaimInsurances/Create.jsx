@@ -33,7 +33,10 @@ const formSchema = z.object({
       /^[A-Za-z\s\u0900-\u097F]+$/,
       "Company name can only contain letters."
     ),
-  sum_insured: z.coerce.number().min(1, "Sum Insured field is required"),
+  sum_insured: z.coerce
+    .number()
+    .min(1, "Sum Insured field is required")
+    .max(99999999, "Sum Insured must not exceed 9,99,99,999"),
   broker_name: z
     .string()
     .min(2, "Broker name must be at least 2 characters")

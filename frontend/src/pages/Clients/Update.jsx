@@ -40,20 +40,26 @@ const formSchema = z.object({
     .nonempty("Email field is required"),
   client_name: z
     .string()
-    .min(2, "Name must be at least 2 characters")
+    .min(1, "Name field is required.")
     .max(100, "Name must be at max 100 characters")
     .regex(/^[A-Za-z\s\u0900-\u097F]+$/, "Name can only contain letters."), // Allow letters and spaces, including Marathi
-  office_address: z.string().optional(),
+  office_address: z
+    .string()
+    .min(1, "Office address field is required.")
+    .max(200, "Office address must be at max 200 characters"),
   office_address_pincode: z
-    .union([z.string(), z.number()])
-    .refine((val) => val === "" || /^\d{6}$/.test(val), {
+    .string()
+    .refine((val) => /^\d{6}$/.test(val), {
       message: "Pincode must be of 6 digits.",
     })
     .optional(),
-  residential_address: z.string().optional(),
+  residential_address: z
+    .string()
+    .min(1, "Residential address field is required.")
+    .max(200, "Residential address must be at max 200 characters"),
   residential_address_pincode: z
-    .union([z.string(), z.number()])
-    .refine((val) => val === "" || /^\d{6}$/.test(val), {
+    .string()
+    .refine((val) => /^\d{6}$/.test(val), {
       message: "Pincode must be of 6 digits.",
     })
     .optional(),
@@ -66,9 +72,12 @@ const formSchema = z.object({
       z.object({
         name: z
           .string()
-          .min(2, " family member Name is required")
+          .min(1, " family member Name is required")
           .max(100, "Name must be at max 100 characters"),
-        relation: z.string().min(2, "Relation is required"),
+        relation: z
+          .string()
+          .min(1, "Relation field is required")
+          .max(100, "Name must be at max 100 characters"),
         date_of_birth: z.string().min(1, "Date of birth is required"),
       })
     )
@@ -132,19 +141,22 @@ const Update = () => {
 
   useEffect(() => {
     if (editClient) {
-      setValue("email", editClient.Client?.email);
-      setValue("client_name", editClient.Client?.client_name);
-      setValue("mobile", editClient?.Client?.mobile);
-      setValue("date_of_birth", editClient.Client?.date_of_birth);
-      setValue("residential_address", editClient.Client?.residential_address);
+      setValue("email", editClient.Client?.email || "");
+      setValue("client_name", editClient.Client?.client_name || "");
+      setValue("mobile", editClient?.Client?.mobile || "");
+      setValue("date_of_birth", editClient.Client?.date_of_birth || "");
+      setValue(
+        "residential_address",
+        editClient.Client?.residential_address || ""
+      );
       setValue(
         "residential_address_pincode",
-        editClient.Client?.residential_address_pincode
+        editClient.Client?.residential_address_pincode || ""
       );
-      setValue("office_address", editClient.Client?.office_address);
+      setValue("office_address", editClient.Client?.office_address || "");
       setValue(
         "office_address_pincode",
-        editClient.Client?.office_address_pincode
+        editClient.Client?.office_address_pincode || ""
       );
       if (editClient.Client?.Family_members) {
         const familyMembers = editClient.Client?.Family_members.map(
@@ -327,12 +339,20 @@ const Update = () => {
                 <Controller
                   name="mobile"
                   control={control}
+                  rules={{
+                    required: "Mobile number is required",
+                    pattern: {
+                      value: /^[0-9]{10}$/,
+                      message: "Mobile number must be exact 10 digits",
+                    },
+                  }}
                   render={({ field }) => (
                     <Input
                       {...field}
                       id="mobile"
                       className="mt-1"
-                      type="number"
+                      type="text"
+                      maxLength={10}
                       placeholder="Enter mobile"
                     />
                   )}

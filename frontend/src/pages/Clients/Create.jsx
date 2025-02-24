@@ -40,20 +40,26 @@ const formSchema = z.object({
     .nonempty("Email field is required"),
   client_name: z
     .string()
-    .min(2, "Name must be at least 2 characters")
+    .min(1, "Name field is required.")
     .max(100, "Name must be at max 100 characters")
     .regex(/^[A-Za-z\s\u0900-\u097F]+$/, "Name can only contain letters."), // Allow letters and spaces, including Marathi
-  office_address: z.string().optional(),
+  office_address: z
+    .string()
+    .min(1, "Office address field is required.")
+    .max(200, "Office address must be at max 200 characters"),
   office_address_pincode: z
     .string()
-    .refine((val) => val === "" || /^\d{6}$/.test(val), {
+    .refine((val) => /^\d{6}$/.test(val), {
       message: "Pincode must be of 6 digits.",
     })
     .optional(),
-  residential_address: z.string().optional(),
+  residential_address: z
+    .string()
+    .min(1, "Residential address field is required.")
+    .max(200, "Residential address must be at max 200 characters"),
   residential_address_pincode: z
     .string()
-    .refine((val) => val === "" || /^\d{6}$/.test(val), {
+    .refine((val) => /^\d{6}$/.test(val), {
       message: "Pincode must be of 6 digits.",
     })
     .optional(),
@@ -66,9 +72,9 @@ const formSchema = z.object({
       z.object({
         name: z
           .string()
-          .min(2, " family member Name is required")
+          .min(1, " family member Name is required")
           .max(100, "Name must be at max 100 characters"),
-        relation: z.string().min(2, "Relation is required"),
+        relation: z.string().min(1, "Relation is required"),
         date_of_birth: z.string().min(1, "Date of birth is required"),
       })
     )
@@ -141,7 +147,7 @@ const Create = () => {
             });
             toast.error("mobile number has already been taken.");
           }
-          if (serverErrors.mobile) {
+          if (serverErrors.client_name) {
             setError("client_name", {
               type: "manual",
               message: serverErrors.client_name[0], // The error message from the server
@@ -272,13 +278,21 @@ const Create = () => {
                 <Controller
                   name="mobile"
                   control={control}
+                  rules={{
+                    required: "Mobile number is required",
+                    pattern: {
+                      value: /^[0-9]{10}$/,
+                      message: "Mobile number must be exact 10 digits",
+                    },
+                  }}
                   render={({ field }) => (
                     <Input
                       {...field}
                       id="mobile"
                       className="mt-1"
-                      type="number"
+                      type="text"
                       placeholder="Enter mobile"
+                      maxLength={10} // Enforce max length of 10 digits
                     />
                   )}
                 />
@@ -532,7 +546,7 @@ const Create = () => {
                                 {...field}
                                 id={`family_members[${index}].name`}
                                 className="mt-1"
-                                placeholder="Enter family member name"
+                                placeholder="Enter name"
                               />
                             )}
                           />

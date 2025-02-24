@@ -32,7 +32,10 @@ const formSchema = z.object({
       /^[A-Za-z\s\u0900-\u097F]+$/,
       "Company name can only contain letters."
     ),
-  sum_insured: z.coerce.number().min(1, "Sum Insured field is required"),
+  sum_insured: z.coerce
+    .number()
+    .min(1, "Sum Insured field is required")
+    .max(99999999, "Sum Insured must not exceed 9,99,99,999"),
   broker_name: z
     .string()
     .min(2, "Broker name must be at least 2 characters")
@@ -122,16 +125,22 @@ const Update = () => {
 
   useEffect(() => {
     if (editClient) {
-      setValue("client_id", editClient.MediclaimInsurance?.client_id);
-      setValue("company_name", editClient.MediclaimInsurance?.company_name);
-      setValue("broker_name", editClient.MediclaimInsurance?.broker_name);
-      setValue("proposal_date", editClient.MediclaimInsurance?.proposal_date);
+      setValue("client_id", editClient.MediclaimInsurance?.client_id || "");
+      setValue(
+        "company_name",
+        editClient.MediclaimInsurance?.company_name || ""
+      );
+      setValue("broker_name", editClient.MediclaimInsurance?.broker_name || "");
+      setValue(
+        "proposal_date",
+        editClient.MediclaimInsurance?.proposal_date || ""
+      );
       setValue(
         "premium_payment_mode",
-        editClient.MediclaimInsurance?.premium_payment_mode
+        editClient.MediclaimInsurance?.premium_payment_mode || ""
       );
-      setValue("sum_insured", editClient.MediclaimInsurance?.sum_insured);
-      setValue("end_date", editClient.MediclaimInsurance?.end_date);
+      setValue("sum_insured", editClient.MediclaimInsurance?.sum_insured || "");
+      setValue("end_date", editClient.MediclaimInsurance?.end_date || "");
     }
   }, [editClient, setValue]);
 
