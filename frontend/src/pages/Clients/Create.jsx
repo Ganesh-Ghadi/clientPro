@@ -192,7 +192,7 @@ const Create = () => {
           {/* breadcrumb ends */}
           {/* form style strat */}
           <div className="px-5 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
-            <div className="w-full py-3 flex justify-start items-center">
+            <div className="w-full pt-3 pb-1 flex justify-start items-center">
               <h2 className="text-lg  font-normal">Personal Information</h2>
             </div>
             {/* row starts */}
@@ -270,7 +270,7 @@ const Create = () => {
             </div>
             {/* row ends */}
             {/* row starts */}
-            <div className="w-full mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
+            <div className="w-full mb-2 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
               <div className="relative">
                 <Label className="font-normal" htmlFor="mobile">
                   Mobile:<span className="text-red-500">*</span>
@@ -303,13 +303,13 @@ const Create = () => {
                 )}
               </div>
             </div>
-            <div className="w-full py-3 flex justify-start items-center">
+            <div className="w-full pt-3 pb-1 flex justify-start items-center">
               <h2 className="text-lg  font-normal">Address Information</h2>
             </div>
             <div className="w-full mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
               <div className="relative col-span-2">
                 <Label className="font-normal" htmlFor="residential_address">
-                  Residential Address:
+                  Residential Address:<span className="text-red-500">*</span>
                 </Label>
                 <Controller
                   name="residential_address"
@@ -335,7 +335,7 @@ const Create = () => {
                   className="font-normal"
                   htmlFor="residential_address_pincode"
                 >
-                  Pincode:
+                  Pincode:<span className="text-red-500">*</span>
                 </Label>
                 <Controller
                   name="residential_address_pincode"
@@ -360,7 +360,7 @@ const Create = () => {
             <div className="w-full mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
               <div className="relative col-span-2">
                 <Label className="font-normal" htmlFor="office_address">
-                  Office Address:
+                  Office Address:<span className="text-red-500">*</span>
                 </Label>
                 <Controller
                   name="office_address"
@@ -383,7 +383,7 @@ const Create = () => {
               </div>
               <div className="relative">
                 <Label className="font-normal" htmlFor="office_address_pincode">
-                  Pincode:
+                  Pincode:<span className="text-red-500">*</span>
                 </Label>
                 <Controller
                   name="office_address_pincode"
