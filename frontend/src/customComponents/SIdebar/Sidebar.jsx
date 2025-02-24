@@ -78,6 +78,11 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           path: "/loans",
           logo: <Landmark size={16} />,
         },
+        {
+          name: "General Insurance",
+          path: "/general_insurances",
+          logo: <Network size={16} />,
+        },
       ],
     },
     {
