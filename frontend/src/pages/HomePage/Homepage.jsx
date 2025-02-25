@@ -1,6 +1,6 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import axios from 'axios';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
 import {
   Card,
   CardContent,
@@ -8,61 +8,48 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
+} from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { User } from 'lucide-react';
-import ColorDisplay from './ColorDisplay';
+import { User } from "lucide-react";
+import ColorDisplay from "./ColorDisplay";
 import {
   IndianRupee,
   AlignStartVertical,
   AlignVerticalDistributeCenter,
   Droplet,
-} from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+} from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 const Homepage = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem("user"));
   const token = user.token;
   const navigate = useNavigate();
 
-  // const {
-  //   data: DashboardData,
-  //   isLoading: isDashboardDataLoading,
-  //   isError: isDashboardDataError,
-  // } = useQuery({
-  //   queryKey: ["dashboards"], // This is the query key
-  //   queryFn: async () => {
-  //     try {
-  //       const response = await axios.get("/api/dashboards", {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-  //       return response.data?.data; // Return the fetched data
-  //     } catch (error) {
-  //       throw new Error(error.message);
-  //     }
-  //   },
-  //   keepPreviousData: true, // Keep previous data until the new data is available
-  // });
+  const {
+    data: DashboardData,
+    isLoading: isDashboardDataLoading,
+    isError: isDashboardDataError,
+  } = useQuery({
+    queryKey: ["dashboards"], // This is the query key
+    queryFn: async () => {
+      try {
+        const response = await axios.get("/api/dashboards", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return response.data?.data; // Return the fetched data
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    keepPreviousData: true, // Keep previous data until the new data is available
+  });
 
-  // const {
-  //   ProfileCount,
-  //   ReceiptCount,
-  //   ReceiptAmount,
-  //   CancelledReceiptCount,
-  //   PoojaDetails,
-  //   HallBookingDetails,
-  //   PoojaCount,
-  //   HallBookingCount,
-  //   SareeDetails,
-  //   UparaneDetails,
-  //   PrasadReceiptDetails,
-  //   PrasadCount,
-  // } = DashboardData || {};
+  const { Clients } = DashboardData || {};
 
   // if (isDashboardDataError) {
   //   return <p>Error</p>;

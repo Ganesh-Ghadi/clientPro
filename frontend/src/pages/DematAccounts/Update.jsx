@@ -411,7 +411,7 @@ const Update = () => {
                 <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-4">
                   <div className="relative">
                     <Label className="font-normal" htmlFor="account_number">
-                      Account Number:<span className="text-red-500">*</span>
+                       Demat Account Number:<span className="text-red-500">*</span>
                     </Label>
                     <Controller
                       name="account_number"
@@ -429,7 +429,7 @@ const Update = () => {
                           id="account_number"
                           className="mt-1"
                           type="text"
-                          placeholder="Enter account number"
+                          placeholder="Enter number"
                           maxLength={16} // Enforce max length of 10 digits
                         />
                       )}

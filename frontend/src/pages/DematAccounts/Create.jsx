@@ -239,7 +239,7 @@ const Create = () => {
                   </p>
                 )}
               </div> */}
-               <div className="relative mt-2 flex flex-col gap-1">
+              <div className="relative mt-2 flex flex-col gap-1">
                 <Label className="font-normal" htmlFor="client_id">
                   Client: <span className="text-red-500">*</span>
                 </Label>
@@ -378,7 +378,8 @@ const Create = () => {
                 <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-4">
                   <div className="relative">
                     <Label className="font-normal" htmlFor="account_number">
-                      Account Number:<span className="text-red-500">*</span>
+                      Demat Account Number:
+                      <span className="text-red-500">*</span>
                     </Label>
                     <Controller
                       name="account_number"
@@ -396,7 +397,7 @@ const Create = () => {
                           id="account_number"
                           className="mt-1"
                           type="text"
-                          placeholder="Enter account number"
+                          placeholder="Enter number"
                           maxLength={16} // Enforce max length of 10 digits
                         />
                       )}
