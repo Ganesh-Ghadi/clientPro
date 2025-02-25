@@ -201,11 +201,11 @@ const Update = () => {
           <div className="flex items-center space-x-2 text-gray-700">
             <span className="">
               <Button
-                onClick={() => navigate("/mediclaim_insurances")}
+                onClick={() => navigate("/lics")}
                 className="p-0 text-blue-700 text-sm font-light"
                 variant="link"
               >
-                LICs
+                LIC
               </Button>
             </span>
             <span className="text-gray-400">/</span>

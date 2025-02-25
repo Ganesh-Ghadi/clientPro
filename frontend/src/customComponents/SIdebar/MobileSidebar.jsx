@@ -138,12 +138,12 @@ const MobileSidebar = ({ open, setOpen }) => {
           logo: <Landmark size={16} />,
         },
         {
-          name: "General Insurance",
+          name: "General Insurances",
           path: "/general_insurances",
           logo: <Network size={16} />,
         },
         {
-          name: "demat Account",
+          name: "demat Accounts",
           path: "/demat_accounts",
           logo: <AlignEndVertical size={16} />,
         },
@@ -215,12 +215,12 @@ const MobileSidebar = ({ open, setOpen }) => {
           logo: <Landmark size={16} />,
         },
         {
-          name: "General Insurance",
+          name: "General Insurances",
           path: "/general_insurances",
           logo: <Network size={16} />,
         },
         {
-          name: "demat Account",
+          name: "demat Accounts",
           path: "/demat_accounts",
           logo: <AlignEndVertical size={16} />,
         },

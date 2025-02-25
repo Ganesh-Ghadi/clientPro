@@ -45,11 +45,11 @@ const formSchema = z.object({
     .regex(/^[A-Za-z\s\u0900-\u097F]+$/, "Name can only contain letters."), // Allow letters and spaces, including Marathi
   office_address: z
     .string()
-    .min(1, "Office address field is required.")
-    .max(200, "Office address must be at max 200 characters"),
+    .max(200, "Office address must be at max 200 characters")
+    .optional(),
   office_address_pincode: z
     .string()
-    .refine((val) => /^\d{6}$/.test(val), {
+    .refine((val) => val === "" || /^\d{6}$/.test(val), {
       message: "Pincode must be of 6 digits.",
     })
     .optional(),
@@ -164,7 +164,9 @@ const Update = () => {
       setValue("office_address", editClient.Client?.office_address || "");
       setValue(
         "office_address_pincode",
-        String(editClient.Client?.office_address_pincode) || ""
+        editClient.Client?.office_address_pincode
+          ? String(editClient.Client?.office_address_pincode)
+          : ""
       );
       if (editClient.Client?.Family_members) {
         const familyMembers = editClient.Client?.Family_members.map(
@@ -378,7 +380,7 @@ const Update = () => {
             <div className="w-full mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
               <div className="relative col-span-2">
                 <Label className="font-normal" htmlFor="residential_address">
-                  Residential Address:
+                  Residential Address:<span className="text-red-500">*</span>
                 </Label>
                 <Controller
                   name="residential_address"
@@ -404,7 +406,7 @@ const Update = () => {
                   className="font-normal"
                   htmlFor="residential_address_pincode"
                 >
-                  Pincode:
+                  Pincode:<span className="text-red-500">*</span>
                 </Label>
                 <Controller
                   name="residential_address_pincode"

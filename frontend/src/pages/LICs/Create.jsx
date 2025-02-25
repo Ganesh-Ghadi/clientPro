@@ -168,7 +168,7 @@ const Create = () => {
                 className="p-0 text-blue-700 text-sm font-light"
                 variant="link"
               >
-                LICs
+                LIC
               </Button>
             </span>
             <span className="text-gray-400">/</span>

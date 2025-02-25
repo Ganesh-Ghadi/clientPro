@@ -193,7 +193,7 @@ const Index = () => {
                             variant="ghost"
                             size="sm"
                             className="w-full text-sm justify-start"
-                            onClick={() => navigate(`/Loans/${Loan.id}/edit`)}
+                            onClick={() => navigate(`/loans/${Loan.id}/edit`)}
                           >
                             <Pencil /> Edit
                           </Button>

@@ -45,11 +45,11 @@ const formSchema = z.object({
     .regex(/^[A-Za-z\s\u0900-\u097F]+$/, "Name can only contain letters."), // Allow letters and spaces, including Marathi
   office_address: z
     .string()
-    .min(1, "Office address field is required.")
-    .max(200, "Office address must be at max 200 characters"),
+    .max(200, "Office address must be at max 200 characters")
+    .optional(),
   office_address_pincode: z
     .string()
-    .refine((val) => /^\d{6}$/.test(val), {
+    .refine((val) => val === "" || /^\d{6}$/.test(val), {
       message: "Pincode must be of 6 digits.",
     })
     .optional(),
@@ -371,7 +371,7 @@ const Create = () => {
             <div className="w-full mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
               <div className="relative col-span-2">
                 <Label className="font-normal" htmlFor="office_address">
-                  Office Address:<span className="text-red-500">*</span>
+                  Office Address:
                 </Label>
                 <Controller
                   name="office_address"
@@ -394,7 +394,7 @@ const Create = () => {
               </div>
               <div className="relative">
                 <Label className="font-normal" htmlFor="office_address_pincode">
-                  Pincode:<span className="text-red-500">*</span>
+                  Pincode:
                 </Label>
                 <Controller
                   name="office_address_pincode"
