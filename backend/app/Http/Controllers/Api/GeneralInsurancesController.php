@@ -17,19 +17,13 @@ class GeneralInsurancesController extends BaseController
     public function index(Request $request): JsonResponse
     {
         $query = GeneralInsurance::with('client');
-        // if ($request->query('search')) {
-        //     $searchTerm = $request->query('search');
+        if ($request->query('search')) {
+            $searchTerm = $request->query('search');
     
-        //     $query->where(function ($query) use ($searchTerm) {
-        //         $query->where('company_name', 'like', '%' . $searchTerm . '%')
-        //         ->orWhere('broker_name', 'like', '%' . $searchTerm . '%')
-        //         ->orWhere('sum_insured', 'like', '%' . $searchTerm . '%')
-        //         ->orWhereHas('client', function($query) use($searchTerm){
-        //             $query->where('client_name','like', '%' . $searchTerm . '%');
-        //         });
-
-        //     });
-        // }
+            $query->whereHas("client",function ($query) use ($searchTerm) {
+                    $query->where('client_name','like', '%' . $searchTerm . '%');
+                });
+        }
         $generalInsurances = $query->Orderby('id', 'desc')->paginate(20);
 
         return $this->sendResponse(["GeneralInsurances"=>GeneralInsuranceResource::collection($generalInsurances),

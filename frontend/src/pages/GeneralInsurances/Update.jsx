@@ -23,11 +23,15 @@ import { toast } from "sonner";
 
 const formSchema = z.object({
   // devta_name: z.string().min(2, "Name must be at least 2 characters"),
-  client_id: z.coerce.number().min(1, "client field is required."),
-  home: z.coerce.number().min(0, "home loan field is required."),
-  car: z.coerce.number().min(0, "home loan field is required."),
-  personal: z.coerce.number().min(0, "home loan field is required."),
-  business: z.coerce.number().min(0, "home loan field is required."),
+  client_id: z.coerce.number().min(1, "Client field is required."),
+  vehicle: z.coerce.number().min(0, "vehicle insurance field is required."),
+  fire: z.coerce.number().min(0, "fire insurance field is required."),
+  society: z.coerce.number().min(0, "society insurance field is required."),
+  workman: z.coerce.number().min(0, "workman insurance field is required."),
+  personal_accident: z.coerce
+    .number()
+    .min(0, "personal account insurance field is required."),
+  others: z.coerce.number().min(0, "others insurance field is required."),
 });
 
 const Update = () => {
@@ -40,10 +44,12 @@ const Update = () => {
 
   const defaultValues = {
     client_id: "",
-    home: "",
-    car: "",
-    personal: "",
-    business: "",
+    vehicle: "",
+    fire: "",
+    society: "",
+    workman: "",
+    personal_accident: "",
+    others: "",
   };
 
   const {
@@ -77,14 +83,14 @@ const Update = () => {
   } = useForm({ resolver: zodResolver(formSchema), defaultValues });
 
   const {
-    data: editLoan,
-    isLoading: isEditLoanDataLoading,
-    isError: isEditLoanDataError,
+    data: editGeneralInsurance,
+    isLoading: isEditGeneralInsuranceDataLoading,
+    isError: isEditGeneralInsuranceDataError,
   } = useQuery({
-    queryKey: ["editLoan", id], // This is the query key
+    queryKey: ["editGeneralInsurance", id], // This is the query key
     queryFn: async () => {
       try {
-        const response = await axios.get(`/api/loans/${id}`, {
+        const response = await axios.get(`/api/general_insurances/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -99,18 +105,26 @@ const Update = () => {
   });
 
   useEffect(() => {
-    if (editLoan) {
-      setValue("client_id", editLoan.Loan?.client_id || "");
-      setValue("home", editLoan.Loan?.home || "");
-      setValue("car", editLoan.Loan?.car || "");
-      setValue("personal", editLoan.Loan?.personal || "");
-      setValue("business", editLoan.Loan?.business || "");
+    if (editGeneralInsurance) {
+      setValue(
+        "client_id",
+        editGeneralInsurance.GeneralInsurance?.client_id || ""
+      );
+      setValue("vehicle", editGeneralInsurance.GeneralInsurance?.vehicle || "");
+      setValue("fire", editGeneralInsurance.GeneralInsurance?.fire || "");
+      setValue("society", editGeneralInsurance.GeneralInsurance?.society || "");
+      setValue("workman", editGeneralInsurance.GeneralInsurance?.workman || "");
+      setValue(
+        "personal_accident",
+        editGeneralInsurance.GeneralInsurance?.personal_accident || ""
+      );
+      setValue("others", editGeneralInsurance.GeneralInsurance?.others || "");
     }
-  }, [editLoan, setValue]);
+  }, [editGeneralInsurance, setValue]);
 
   const updateMutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/loans/${id}`, data, {
+      const response = await axios.put(`/api/general_insurances/${id}`, data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Include the Bearer token
@@ -119,11 +133,11 @@ const Update = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries("loans");
+      queryClient.invalidateQueries("general_insurances");
 
-      toast.success("Loans Updated Successfully");
+      toast.success("Insurance details Updated Successfully");
       setIsLoading(false);
-      navigate("/loans");
+      navigate("/general_insurances");
     },
     onError: (error) => {
       setIsLoading(false);
@@ -139,10 +153,10 @@ const Update = () => {
             // toast.error("The poo has already been taken.");
           }
         } else {
-          toast.error("Failed to Update loan details.");
+          toast.error("Failed to Update General Insurance details.");
         }
       } else {
-        toast.error("Failed to Update loan details.");
+        toast.error("Failed to Update General Insurance details.");
       }
     },
   });
@@ -159,15 +173,15 @@ const Update = () => {
           <div className="flex items-center space-x-2 text-gray-700">
             <span className="">
               <Button
-                onClick={() => navigate("/loans")}
+                onClick={() => navigate("/general_insurances")}
                 className="p-0 text-blue-700 text-sm font-light"
                 variant="link"
               >
-                Loans
+                General Insurances
               </Button>
             </span>
             <span className="text-gray-400">/</span>
-            <span className="dark:text-gray-300">Add</span>
+            <span className="dark:text-gray-300">Edit</span>
           </div>
         </div>
         {/* breadcrumb ends */}
@@ -175,7 +189,7 @@ const Update = () => {
         {/* form style strat */}
         <div className="px-5 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
           <div className="w-full py-3 flex justify-start items-center">
-            <h2 className="text-lg  font-normal">Add Loan</h2>
+            <h2 className="text-lg  font-normal">Add General Insurance</h2>
           </div>
           {/* row starts */}
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -217,75 +231,75 @@ const Update = () => {
             <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-6 gap-7 md:gap-4">
               <div className="relative flex gap-2 md:pt-6 md:pl-2 ">
                 <Controller
-                  name="home"
+                  name="vehicle"
                   control={control}
                   render={({ field }) => (
                     <input
-                      id="home"
+                      id="vehicle"
                       {...field}
-                      type="checkbox"
                       checked={field.value === 1}
                       onChange={(e) => {
-                        field.onChange(e.target.checked ? 1 : 0); // Map true/false to 1/0
+                        field.onChange(e.target.checked ? 1 : 0);
                       }}
+                      type="checkbox"
                       className="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                     />
                   )}
                 />
-                <Label className="font-normal" htmlFor="home">
-                  Home Loan
+                <Label className="font-normal" htmlFor="vehicle">
+                  Vehicle Insurance
                 </Label>
-                {errors.home && (
+                {errors.vehicle && (
                   <p className="absolute text-red-500 text-sm mt-1 left-0">
-                    {errors.home.message}
+                    {errors.vehicle.message}
                   </p>
                 )}
               </div>
               <div className="relative flex gap-2 md:pt-6 md:pl-2 ">
                 <Controller
-                  name="car"
+                  name="fire"
                   control={control}
                   render={({ field }) => (
                     <input
-                      id="car"
+                      id="fire"
                       {...field}
-                      type="checkbox"
                       checked={field.value === 1}
                       onChange={(e) => {
-                        field.onChange(e.target.checked ? 1 : 0); // Map true/false to 1/0
+                        field.onChange(e.target.checked ? 1 : 0);
                       }}
+                      type="checkbox"
                       className="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                     />
                   )}
                 />
-                <Label className="font-normal" htmlFor="car">
-                  Car Loan
+                <Label className="font-normal" htmlFor="fire">
+                  Fire Insurance
                 </Label>
-                {errors.car && (
+                {errors.fire && (
                   <p className="absolute text-red-500 text-sm mt-1 left-0">
-                    {errors.car.message}
+                    {errors.fire.message}
                   </p>
                 )}
               </div>
               <div className="relative flex gap-2 md:pt-6 md:pl-2 ">
                 <Controller
-                  name="personal"
+                  name="society"
                   control={control}
                   render={({ field }) => (
                     <input
-                      id="personal"
+                      id="society"
                       {...field}
-                      type="checkbox"
                       checked={field.value === 1}
                       onChange={(e) => {
-                        field.onChange(e.target.checked ? 1 : 0); // Map true/false to 1/0
+                        field.onChange(e.target.checked ? 1 : 0);
                       }}
+                      type="checkbox"
                       className="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                     />
                   )}
                 />
-                <Label className="font-normal" htmlFor="personal">
-                  Personal Loan
+                <Label className="font-normal" htmlFor="society">
+                  society
                 </Label>
                 {errors.personal && (
                   <p className="absolute text-red-500 text-sm mt-1 left-0">
@@ -295,27 +309,79 @@ const Update = () => {
               </div>
               <div className="relative flex gap-2 md:pt-6 md:pl-2 ">
                 <Controller
-                  name="business"
+                  name="workman"
                   control={control}
                   render={({ field }) => (
                     <input
-                      id="business"
+                      id="workman"
                       {...field}
-                      type="checkbox"
                       checked={field.value === 1}
                       onChange={(e) => {
-                        field.onChange(e.target.checked ? 1 : 0); // Map true/false to 1/0
+                        field.onChange(e.target.checked ? 1 : 0);
                       }}
+                      type="checkbox"
                       className="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                     />
                   )}
                 />
-                <Label className="font-normal" htmlFor="business">
-                  Business Loan
+                <Label className="font-normal" htmlFor="workman">
+                  Workman
                 </Label>
-                {errors.business && (
+                {errors.workman && (
                   <p className="absolute text-red-500 text-sm mt-1 left-0">
-                    {errors.business.message}
+                    {errors.workman.message}
+                  </p>
+                )}
+              </div>
+              <div className="relative flex gap-2 md:pt-6 md:pl-2 ">
+                <Controller
+                  name="personal_accident"
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      id="personal_accident"
+                      {...field}
+                      checked={field.value === 1}
+                      onChange={(e) => {
+                        field.onChange(e.target.checked ? 1 : 0);
+                      }}
+                      type="checkbox"
+                      className="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                    />
+                  )}
+                />
+                <Label className="font-normal" htmlFor="personal_accident">
+                  Personal accident
+                </Label>
+                {errors.personal_accident && (
+                  <p className="absolute text-red-500 text-sm mt-1 left-0">
+                    {errors.personal_accident.message}
+                  </p>
+                )}
+              </div>
+              <div className="relative flex gap-2 md:pt-6 md:pl-2 ">
+                <Controller
+                  name="others"
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      id="others"
+                      {...field}
+                      checked={field.value === 1}
+                      onChange={(e) => {
+                        field.onChange(e.target.checked ? 1 : 0);
+                      }}
+                      type="checkbox"
+                      className="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                    />
+                  )}
+                />
+                <Label className="font-normal" htmlFor="others">
+                  other Insurance
+                </Label>
+                {errors.others && (
+                  <p className="absolute text-red-500 text-sm mt-1 left-0">
+                    {errors.others.message}
                   </p>
                 )}
               </div>
@@ -326,7 +392,7 @@ const Update = () => {
               <Button
                 type="button"
                 className="dark:text-white shadow-xl bg-red-600 hover:bg-red-700"
-                onClick={() => navigate("/loans")}
+                onClick={() => navigate("/general_insurances")}
               >
                 Cancel
               </Button>

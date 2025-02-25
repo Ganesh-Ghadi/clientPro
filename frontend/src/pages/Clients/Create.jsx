@@ -528,7 +528,7 @@ const Create = () => {
                 <TableRow>
                   <TableHead className="">Name</TableHead>{" "}
                   <TableHead className="">Relation</TableHead>{" "}
-                  <TableHead className="">Date</TableHead>{" "}
+                  <TableHead className="">Date of Birth</TableHead>{" "}
                   {/*removed w-[100px] from here */}
                   <TableHead className="text-right">Action</TableHead>
                 </TableRow>

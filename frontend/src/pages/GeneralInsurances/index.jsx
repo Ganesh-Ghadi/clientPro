@@ -21,6 +21,16 @@ import {
   MoreHorizontal,
   ListFilter,
 } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import Pagination from "@/customComponents/Pagination/Pagination";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -42,9 +52,15 @@ const Index = () => {
   const [search, setSearch] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
   const [currentPage, setCurrentPage] = useState(1);
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [client, setClient] = useState("");
 
   const token = user.token;
   const navigate = useNavigate();
+
+  const toggleSearchSection = () => {
+    setIsSearchVisible((prev) => !prev); // Toggle between true and false
+  };
 
   const {
     data: GeneralInsurancesData,
@@ -81,11 +97,19 @@ const Index = () => {
   if (isGeneralInsurancesDataError) {
     return <p>Error fetching data</p>;
   }
+  const clearSearch = () => {};
 
   return (
     <>
       <div className="w-full p-5">
         <div className="w-full mb-7 text-right md:pr-6">
+          {/* <Button
+            onClick={toggleSearchSection}
+            variant=""
+            className="text-sm mr-4 dark:text-white shadow-xl bg-blue-600 hover:bg-blue-700"
+          >
+            Search Receipts
+          </Button> */}
           <Button
             onClick={() => navigate("/general_insurances/create")}
             variant=""
@@ -94,6 +118,46 @@ const Index = () => {
             Add General Insurance
           </Button>
         </div>
+        {isSearchVisible && (
+          <div className="px-5 my-3 dark:bg-background pt-1 w-full bg-white shadow-xl border rounded-md">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl py-3 font-semibold leading-none tracking-tight">
+                Search
+              </h2>
+              <Button
+                variant="ghost"
+                onClick={clearSearch}
+                className="bg-red-600 mt-3 w-20 text-white hover:bg-red-700 hover:text-white"
+              >
+                Clear
+              </Button>
+            </div>
+            <div className="w-full mb-4 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
+              <div className="relative">
+                <Label className="font-normal" htmlFor="devta_id">
+                  Receipt Type:
+                </Label>
+                <Select value={client} onValueChange={setClient}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select receipt type" />
+                  </SelectTrigger>
+                  <SelectContent className="pb-10">
+                    <SelectGroup>
+                      <SelectLabel>Select receipt type</SelectLabel>
+                      {allReceiptTypesData?.ReceiptTypes &&
+                        allReceiptTypesData?.ReceiptTypes.map((receiptType) => (
+                          <SelectItem value={String(receiptType.receipt_type)}>
+                            {receiptType.receipt_type}
+                          </SelectItem>
+                        ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="w-full mb-8 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4"></div>
+          </div>
+        )}
         <div className="px-5 dark:bg-background pt-1 w-full bg-white shadow-xl border rounded-md">
           <div className="w-full py-3 flex flex-col gap-2 md:flex-row justify-between items-center">
             <h2 className="text-2xl font-semibold leading-none tracking-tight">
