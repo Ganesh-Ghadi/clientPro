@@ -35,7 +35,7 @@ const Delete = ({ id }) => {
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: async () => {
-      const response = await axios.delete(`/api/loans/${id}`, {
+      const response = await axios.delete(`/api/demat_accounts/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Include the Bearer token
@@ -44,10 +44,10 @@ const Delete = ({ id }) => {
       return response.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries("lics");
-      toast.success("Loan data Deleted Successfully.");
+      queryClient.invalidateQueries("demat_accounts");
+      toast.success("Demat Account data Deleted Successfully.");
       setIsLoading(false);
-      navigate("/loans");
+      navigate("/demat_accounts");
     },
     onError: (error) => {
       setIsLoading(false);
@@ -75,8 +75,8 @@ const Delete = ({ id }) => {
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. By proceeding, you will permanently
-              delete "Loan details". Once deleted, this information cannot be
-              recovered.
+              delete "Demat Account details". Once deleted, this information
+              cannot be recovered.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

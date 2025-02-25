@@ -41,7 +41,7 @@ const formSchema = z.object({
   //     .max(100, "Service Provider must be at max 100 characters")
   //     .regex(/^[A-Za-z\s]+$/, "Service Provider can only contain letters."),
   account_number: z.string().optional(), // Make it optional
-  have_demat_account: z.string().optional(),
+  have_mutual_fund_account: z.string().optional(),
 
   service_provider: z.string().optional(), // Make it optional
 });
@@ -58,7 +58,7 @@ const Update = () => {
     client_id: "",
     account_number: "",
     service_provider: "",
-    have_demat_account: "0",
+    have_mutual_fund_account: "0",
   };
 
   const {
@@ -92,17 +92,17 @@ const Update = () => {
     setError,
   } = useForm({ resolver: zodResolver(formSchema), defaultValues });
 
-  const haveDemat = watch("have_demat_account");
+  const haveMutual = watch("have_mutual_fund_account");
 
   const {
-    data: editDematAccount,
-    isLoading: isEditDematAccountDataLoading,
-    isError: isEditDematAccountDataError,
+    data: editMutual,
+    isLoading: isEditMutualDataLoading,
+    isError: isEditMutualDataError,
   } = useQuery({
-    queryKey: ["editDematAccount", id], // This is the query key
+    queryKey: ["editMutualFund", id], // This is the query key
     queryFn: async () => {
       try {
-        const response = await axios.get(`/api/demat_accounts/${id}`, {
+        const response = await axios.get(`/api/mutual_funds/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -117,26 +117,23 @@ const Update = () => {
   });
 
   useEffect(() => {
-    if (editDematAccount) {
-      setValue("client_id", editDematAccount.DematAccount?.client_id || "");
+    if (editMutual) {
+      setValue("client_id", editMutual.MutualFund?.client_id || "");
       setValue(
         "service_provider",
-        editDematAccount.DematAccount?.service_provider || ""
+        editMutual.MutualFund?.service_provider || ""
       );
+      setValue("account_number", editMutual.MutualFund?.account_number || "");
       setValue(
-        "account_number",
-        editDematAccount.DematAccount?.account_number || ""
-      );
-      setValue(
-        "have_demat_account",
-        editDematAccount.DematAccount?.have_demat_account ? "1" : "0"
+        "have_mutual_fund_account",
+        editMutual.MutualFund?.have_mutual_fund_account ? "1" : "0"
       );
     }
-  }, [editDematAccount, setValue]);
+  }, [editMutual, setValue]);
 
   const updateMutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.put(`/api/demat_accounts/${id}`, data, {
+      const response = await axios.put(`/api/mutual_funds/${id}`, data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Include the Bearer token
@@ -145,11 +142,11 @@ const Update = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries("demat_accounts");
+      queryClient.invalidateQueries("mutual_funds");
 
-      toast.success("Demat Account details Updated Successfully");
+      toast.success("Mutual Funds details Updated Successfully");
       setIsLoading(false);
-      navigate("/demat_accounts");
+      navigate("/mutual_funds");
     },
     onError: (error) => {
       setIsLoading(false);
@@ -179,16 +176,16 @@ const Update = () => {
             // toast.error("The poo has already been taken.");
           }
         } else {
-          toast.error("Failed to Update Demat Account details.");
+          toast.error("Failed to Update Mutual Funds details.");
         }
       } else {
-        toast.error("Failed to Update Demat Account details.");
+        toast.error("Failed to Update Mutual Funds details.");
       }
     },
   });
   const onSubmit = (data) => {
     setIsLoading(true);
-    if (data.have_demat_account === "0") {
+    if (data.have_mutual_fund_account === "0") {
       data.service_provider = "";
       data.account_number = "";
     }
@@ -203,11 +200,11 @@ const Update = () => {
           <div className="flex items-center space-x-2 text-gray-700">
             <span className="">
               <Button
-                onClick={() => navigate("/demat_accounts")}
+                onClick={() => navigate("/mutual_funds")}
                 className="p-0 text-blue-700 text-sm font-light"
                 variant="link"
               >
-                Demat Accounts
+                Mutual Funds
               </Button>
             </span>
             <span className="text-gray-400">/</span>
@@ -220,7 +217,7 @@ const Update = () => {
 
         <div className="px-5 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
           <div className="w-full py-3 flex justify-start items-center">
-            <h2 className="text-lg  font-normal">Edit Demat Account Details</h2>
+            <h2 className="text-lg  font-normal">Edit Mutual Funds Details</h2>
           </div>
           {/* row starts */}
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -258,18 +255,19 @@ const Update = () => {
                 )}
               </div>
               <div className="a">
-                <Label className="font-normal" htmlFor="demat-yes">
-                  Have Demat Account <span className="text-red-500">*</span>
+                <Label className="font-normal" htmlFor="mutual-yes">
+                  Have Mutual Fund Account{" "}
+                  <span className="text-red-500">*</span>
                 </Label>
                 <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-10 gap-7 md:gap-4">
                   <div className="relative flex gap-2 md:pt-3 md:pl-2 ">
                     <Controller
-                      name="have_demat_account"
+                      name="have_mutual_fund_account"
                       control={control}
                       defaultValue={0}
                       render={({ field }) => (
                         <input
-                          id="demat-no"
+                          id="mutual-no"
                           {...field}
                           type="radio"
                           value="0"
@@ -278,22 +276,22 @@ const Update = () => {
                         />
                       )}
                     />
-                    <Label className="font-normal" htmlFor="demat-no">
+                    <Label className="font-normal" htmlFor="mutual-no">
                       No
                     </Label>
-                    {errors.have_demat_account && (
+                    {errors.have_mutual_fund_account && (
                       <p className="absolute text-red-500 text-sm mt-1 left-0">
-                        {errors.have_demat_account.message}
+                        {errors.have_mutual_fund_account.message}
                       </p>
                     )}
                   </div>
                   <div className="relative flex gap-2 md:pt-3 md:pl-2 ">
                     <Controller
-                      name="have_demat_account"
+                      name="have_mutual_fund_account"
                       control={control}
                       render={({ field }) => (
                         <input
-                          id="demat-yes"
+                          id="mutual-yes"
                           {...field}
                           type="radio"
                           value="1"
@@ -302,20 +300,19 @@ const Update = () => {
                         />
                       )}
                     />
-                    <Label className="font-normal" htmlFor="demat-yes">
+                    <Label className="font-normal" htmlFor="mutual-yes">
                       Yes
                     </Label>
-                    {errors.have_demat_account && (
+                    {errors.have_mutual_fund_account && (
                       <p className="absolute text-red-500 text-sm mt-1 left-0">
-                        {errors.have_demat_account.message}
+                        {errors.have_mutual_fund_account.message}
                       </p>
                     )}
                   </div>
                 </div>
               </div>
             </div>
-            {console.log(typeof haveDemat)}
-            {haveDemat === "1" ? (
+            {haveMutual === "1" ? (
               <>
                 <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-4">
                   <div className="relative">
@@ -383,7 +380,7 @@ const Update = () => {
               <Button
                 type="button"
                 className="dark:text-white shadow-xl bg-red-600 hover:bg-red-700"
-                onClick={() => navigate("/demat_accounts")}
+                onClick={() => navigate("/mutual_funds")}
               >
                 Cancel
               </Button>

@@ -42,7 +42,7 @@ const formSchema = z.object({
   //     .max(100, "Service Provider must be at max 100 characters")
   //     .regex(/^[A-Za-z\s]+$/, "Service Provider can only contain letters."),
   account_number: z.string().optional(), // Make it optional
-  have_demat_account: z.string().optional(),
+  have_mutual_fund_account: z.string().optional(),
 
   service_provider: z.string().optional(), // Make it optional
 });
@@ -57,7 +57,7 @@ const Create = () => {
     client_id: "",
     account_number: "",
     service_provider: "",
-    have_demat_account: "0",
+    have_mutual_fund_account: "0",
   };
 
   const {
@@ -91,11 +91,11 @@ const Create = () => {
     setValue,
   } = useForm({ resolver: zodResolver(formSchema), defaultValues });
 
-  const haveDemat = watch("have_demat_account");
+  const haveMutual = watch("have_mutual_fund_account");
 
   const storeMutation = useMutation({
     mutationFn: async (data) => {
-      const response = await axios.post("/api/demat_accounts", data, {
+      const response = await axios.post("/api/mutual_funds", data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`, // Include the Bearer token
@@ -104,10 +104,10 @@ const Create = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries("demat_accounts");
-      toast.success("Demat Account details Added Successfully");
+      queryClient.invalidateQueries("mutual_funds");
+      toast.success("Mutual Funds details Added Successfully");
       setIsLoading(false);
-      navigate("/demat_accounts");
+      navigate("/mutual_funds");
     },
     onError: (error) => {
       setIsLoading(false);
@@ -137,17 +137,17 @@ const Create = () => {
             // toast.error("The poo has already been taken.");
           }
         } else {
-          toast.error("Failed to add Demat Account details.");
+          toast.error("Failed to add Mutual Fund details.");
         }
       } else {
-        toast.error("Failed to add Demat Account details.");
+        toast.error("Failed to add Mutual Fund details.");
       }
     },
   });
   const onSubmit = (data) => {
     setIsLoading(true);
 
-    if (data.have_demat_account === "0") {
+    if (data.have_mutual_fund_account === "0") {
       data.service_provider = "";
       data.account_number = "";
     }
@@ -156,8 +156,8 @@ const Create = () => {
 
   useEffect(() => {
     // Ensure that the form is initialized with "0" for 'have_demat_account'
-    if (!watch("have_demat_account")) {
-      setValue("have_demat_account", "0");
+    if (!watch("have_mutual_fund_account")) {
+      setValue("have_mutual_fund_account", "0");
     }
   }, [setValue, watch]);
 
@@ -169,11 +169,11 @@ const Create = () => {
           <div className="flex items-center space-x-2 text-gray-700">
             <span className="">
               <Button
-                onClick={() => navigate("/demat_accounts")}
+                onClick={() => navigate("/mutual_funds")}
                 className="p-0 text-blue-700 text-sm font-light"
                 variant="link"
               >
-                Demat Accounts
+                Mutual Funds
               </Button>
             </span>
             <span className="text-gray-400">/</span>
@@ -186,7 +186,7 @@ const Create = () => {
 
         <div className="px-5 pb-7 dark:bg-background pt-1 w-full bg-white shadow-lg border  rounded-md">
           <div className="w-full py-3 flex justify-start items-center">
-            <h2 className="text-lg  font-normal">Add Demat Account Details</h2>
+            <h2 className="text-lg  font-normal">Add Mutual Funds Details</h2>
           </div>
           {/* row starts */}
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -224,18 +224,19 @@ const Create = () => {
                 )}
               </div>
               <div className="a">
-                <Label className="font-normal" htmlFor="demat-yes">
-                  Have Demat Account <span className="text-red-500">*</span>
+                <Label className="font-normal" htmlFor="mutual-yes">
+                  Have Mutual Fund Account{" "}
+                  <span className="text-red-500">*</span>
                 </Label>
                 <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-10 gap-7 md:gap-4">
                   <div className="relative flex gap-2 md:pt-3 md:pl-2 ">
                     <Controller
-                      name="have_demat_account"
+                      name="have_mutual_fund_account"
                       control={control}
                       defaultValue={0}
                       render={({ field }) => (
                         <input
-                          id="demat-no"
+                          id="mutual-no"
                           {...field}
                           type="radio"
                           value="0"
@@ -244,22 +245,22 @@ const Create = () => {
                         />
                       )}
                     />
-                    <Label className="font-normal" htmlFor="demat-no">
+                    <Label className="font-normal" htmlFor="mutual-no">
                       No
                     </Label>
-                    {errors.have_demat_account && (
+                    {errors.have_mutual_fund_account && (
                       <p className="absolute text-red-500 text-sm mt-1 left-0">
-                        {errors.have_demat_account.message}
+                        {errors.have_mutual_fund_account.message}
                       </p>
                     )}
                   </div>
                   <div className="relative flex gap-2 md:pt-3 md:pl-2 ">
                     <Controller
-                      name="have_demat_account"
+                      name="have_mutual_fund_account"
                       control={control}
                       render={({ field }) => (
                         <input
-                          id="demat-yes"
+                          id="mutual-yes"
                           {...field}
                           type="radio"
                           value="1"
@@ -268,20 +269,19 @@ const Create = () => {
                         />
                       )}
                     />
-                    <Label className="font-normal" htmlFor="demat-yes">
+                    <Label className="font-normal" htmlFor="mutual-yes">
                       Yes
                     </Label>
-                    {errors.have_demat_account && (
+                    {errors.have_mutual_fund_account && (
                       <p className="absolute text-red-500 text-sm mt-1 left-0">
-                        {errors.have_demat_account.message}
+                        {errors.have_mutual_fund_account.message}
                       </p>
                     )}
                   </div>
                 </div>
               </div>
             </div>
-            {console.log(typeof haveDemat)}
-            {haveDemat === "1" ? (
+            {haveMutual === "1" ? (
               <>
                 <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-4">
                   <div className="relative">
@@ -349,7 +349,7 @@ const Create = () => {
               <Button
                 type="button"
                 className="dark:text-white shadow-xl bg-red-600 hover:bg-red-700"
-                onClick={() => navigate("/demat_accounts")}
+                onClick={() => navigate("/mutual_funds")}
               >
                 Cancel
               </Button>

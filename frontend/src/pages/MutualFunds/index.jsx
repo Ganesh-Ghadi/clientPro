@@ -47,14 +47,14 @@ const Index = () => {
   const navigate = useNavigate();
 
   const {
-    data: DematAccountsData,
-    isLoading: isDematAccountDataLoading,
-    isError: isDematAccountDataError,
+    data: MutualFundsData,
+    isLoading: isMutualFundDataLoading,
+    isError: isMutualFundDataError,
   } = useQuery({
-    queryKey: ["demat_accounts", currentPage, search], // This is the query key
+    queryKey: ["mutual_funds", currentPage, search], // This is the query key
     queryFn: async () => {
       try {
-        const response = await axios.get("/api/demat_accounts", {
+        const response = await axios.get("/api/mutual_funds", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -73,12 +73,12 @@ const Index = () => {
   });
 
   // pagination start
-  const { DematAccounts, pagination } = DematAccountsData || {};
+  const { MutualFunds, pagination } = MutualFundsData || {};
   const { current_page, last_page, total, per_page } = pagination || {}; // Destructure pagination data
 
   // pagination end
 
-  if (isDematAccountDataError) {
+  if (isMutualFundDataError) {
     return <p>Error fetching data</p>;
   }
 
@@ -87,17 +87,17 @@ const Index = () => {
       <div className="w-full p-5">
         <div className="w-full mb-7 text-right md:pr-6">
           <Button
-            onClick={() => navigate("/demat_accounts/create")}
+            onClick={() => navigate("/mutual_funds/create")}
             variant=""
             className="text-sm dark:text-white shadow-xl bg-blue-600 hover:bg-blue-700"
           >
-            Add Demat account Details
+            Add Mutual Fund Details
           </Button>
         </div>
         <div className="px-5 dark:bg-background pt-1 w-full bg-white shadow-xl border rounded-md">
           <div className="w-full py-3 flex flex-col gap-2 md:flex-row justify-between items-center">
             <h2 className="text-2xl font-semibold leading-none tracking-tight">
-              Demat Accounts Details
+              Mutual Fund Details
             </h2>
             {/* search field here */}
             <div className="relative p-0.5 ">
@@ -124,7 +124,7 @@ const Index = () => {
                 }}
                 id="search"
                 className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Search for demat Accounts"
+                placeholder="Search for mutual funds"
               />
             </div>
             {/* end */}
@@ -151,20 +151,20 @@ const Index = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {DematAccounts &&
-                DematAccounts.map((DematAccount) => (
+              {MutualFunds &&
+                MutualFunds.map((mutualFund) => (
                   <TableRow
-                    key={DematAccount.id}
+                    key={mutualFund.id}
                     className=" dark:border-b dark:border-gray-600"
                   >
                     <TableCell className="font-medium p-2">
-                      {DematAccount.client_name}
+                      {mutualFund.client_name}
                     </TableCell>
                     <TableCell className="font-medium p-2">
-                      {DematAccount.account_number || "N/A"}
+                      {mutualFund.account_number || "N/A"}
                     </TableCell>
                     <TableCell className="font-medium p-2">
-                      {DematAccount.service_provider || "N/A"}
+                      {mutualFund.service_provider || "N/A"}
                     </TableCell>
                     <TableCell className="text-right p-2 pr-5">
                       <DropdownMenu>
@@ -185,15 +185,13 @@ const Index = () => {
                             size="sm"
                             className="w-full text-sm justify-start"
                             onClick={() =>
-                              navigate(
-                                `/demat_accounts/${DematAccount.id}/edit`
-                              )
+                              navigate(`/mutual_funds/${mutualFund.id}/edit`)
                             }
                           >
                             <Pencil /> Edit
                           </Button>
                           <div className="w-full">
-                            <Delete id={DematAccount.id} />
+                            <Delete id={mutualFund.id} />
                           </div>
                         </DropdownMenuContent>
                       </DropdownMenu>

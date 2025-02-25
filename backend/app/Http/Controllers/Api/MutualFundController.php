@@ -52,7 +52,7 @@ class MutualFundController extends BaseController
     {
         $mutualFunds = new MutualFund();
         $mutualFunds->client_id = $request->input("client_id");
-        $mutualFunds->have_demat_account = $request->input("have_demat_account");
+        $mutualFunds->have_mutual_fund_account = $request->input("have_mutual_fund_account");
         $mutualFunds->account_number = $request->input("account_number");
         $mutualFunds->service_provider = $request->input("service_provider");
         $mutualFunds->save();
@@ -87,7 +87,7 @@ class MutualFundController extends BaseController
         
         $mutualFunds->client_id = $request->input("client_id");
         $mutualFunds->account_number = $request->input("account_number");
-        $mutualFunds->have_demat_account = $request->input("have_demat_account");
+        $mutualFunds->have_mutual_fund_account = $request->input("have_mutual_fund_account");
         $mutualFunds->service_provider = $request->input("service_provider");
         $mutualFunds->save();
        
