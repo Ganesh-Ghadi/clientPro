@@ -20,6 +20,9 @@ import UpdateUsers from "./pages/Users/Update";
 import Clients from "./pages/Clients/index";
 import CreateClients from "./pages/Clients/Create";
 import UpdateClients from "./pages/Clients/Update";
+import DematAccounts from "./pages/DematAccounts/index";
+import CreateDematAccounts from "./pages/DematAccounts/Create";
+import UpdateDematAccounts from "./pages/DematAccounts/Update";
 import GeneralInsurances from "./pages/GeneralInsurances/index";
 import CreateGeneralInsurances from "./pages/GeneralInsurances/Create";
 import UpdateGeneralInsurances from "./pages/GeneralInsurances/Update";
@@ -120,6 +123,15 @@ const App = () => {
           <Route path="/term_plans" element={<TermPlans />} />
           <Route path="/term_plans/create" element={<CreateTermPlans />} />
           <Route path="/term_plans/:id/edit" element={<UpdateTermPlans />} />
+          <Route path="/demat_accounts" element={<DematAccounts />} />
+          <Route
+            path="/demat_accounts/create"
+            element={<CreateDematAccounts />}
+          />
+          <Route
+            path="/demat_accounts/:id/edit"
+            element={<UpdateDematAccounts />}
+          />
           <Route path="/general_insurances" element={<GeneralInsurances />} />
           <Route
             path="/general_insurances/create"

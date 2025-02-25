@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { NavLink } from "react-router-dom";
 import {
   Sheet,
   SheetClose,
@@ -12,35 +12,38 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet';
+} from "@/components/ui/sheet";
 import {
   Minus,
+  Settings,
   LayoutDashboard,
   Users,
-  Network,
   Sun,
-  Settings,
+  Network,
   SquareUserRound,
-  CircleGauge,
-  HandCoins,
   AlignStartVertical,
   CircleChevronLeft,
   UsersRound,
   Notebook,
+  HandCoins,
   ReceiptText,
   Flower,
   Paperclip,
   ClipboardPlus,
   ClipboardMinus,
-} from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { AlignJustify } from 'lucide-react';
-import { IoIosArrowDown } from 'react-icons/io';
-import { IoLogoSlack } from 'react-icons/io';
+  Calendar,
+  FileKey2,
+  Landmark,
+  AlignEndVertical,
+} from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { AlignJustify } from "lucide-react";
+import { IoIosArrowDown } from "react-icons/io";
+import { IoLogoSlack } from "react-icons/io";
 
 const MobileSidebar = ({ open, setOpen }) => {
   const [activeParent, setActiveParent] = useState(null);
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem("user"));
   const role = user?.user?.role?.name;
   // const items = [
   //   {
@@ -100,40 +103,70 @@ const MobileSidebar = ({ open, setOpen }) => {
   // ];
   const adminItems = [
     {
-      name: 'Dashboard',
-      path: '/',
+      name: "Dashboard",
+      path: "/",
       logo: <LayoutDashboard size={16} />,
     },
     {
-      name: 'Masters',
-      path: '#',
-      logo: <Settings size={16} />,
+      name: "Clients",
+      path: "/clients",
+      logo: <UsersRound size={16} />,
+    },
+    {
+      name: "Categories",
+      path: "#",
+      logo: <SquareUserRound size={16} />,
       children: [
         {
-          name: 'Clients',
-          path: '/clients',
-          logo: <Sun size={16} />,
+          name: "Mediclaim Insurances",
+          path: "/mediclaim_insurances",
+          logo: <ReceiptText size={16} />,
+        },
+        {
+          name: "Term Plans",
+          path: "/term_plans",
+          logo: <HandCoins size={16} />,
+        },
+        {
+          name: "LIC",
+          path: "/lics",
+          logo: <FileKey2 size={16} />,
+        },
+        {
+          name: "Loans",
+          path: "/loans",
+          logo: <Landmark size={16} />,
+        },
+        {
+          name: "General Insurance",
+          path: "/general_insurances",
+          logo: <Network size={16} />,
+        },
+        {
+          name: "demat Account",
+          path: "/demat_accounts",
+          logo: <AlignEndVertical size={16} />,
         },
       ],
     },
     {
-      name: 'User Management',
-      path: '#',
+      name: "User Management",
+      path: "#",
       logo: <Users size={16} />,
       children: [
         {
-          name: 'Permissions',
-          path: '/permissions',
+          name: "Permissions",
+          path: "/permissions",
           logo: <Paperclip size={16} />,
         },
         {
-          name: 'Roles',
-          path: '/roles',
+          name: "Roles",
+          path: "/roles",
           logo: <Notebook size={16} />,
         },
         {
-          name: 'Users',
-          path: '/users',
+          name: "Users",
+          path: "/users",
           logo: <UsersRound size={16} />,
         },
       ],
@@ -142,25 +175,77 @@ const MobileSidebar = ({ open, setOpen }) => {
 
   const limitedItems = [
     {
-      name: 'Dashboard',
-      path: '/',
+      name: "Dashboard",
+      path: "/",
       logo: <LayoutDashboard size={16} />,
     },
     {
-      name: 'Masters',
-      path: '#',
-      logo: <Settings size={16} />,
+      name: "Clients",
+      path: "/clients",
+      logo: <UsersRound size={16} />,
+    },
+    {
+      name: "Categories",
+      path: "#",
+      logo: <SquareUserRound size={16} />,
       children: [
         {
-          name: 'Clients',
-          path: '/clients',
-          logo: <Flower size={16} />,
+          name: "Mediclaim Insurances",
+          path: "/mediclaim_insurances",
+          logo: <ReceiptText size={16} />,
+        },
+        {
+          name: "Term Plans",
+          path: "/term_plans",
+          logo: <HandCoins size={16} />,
+        },
+        {
+          name: "LIC",
+          path: "/lics",
+          logo: <FileKey2 size={16} />,
+        },
+        {
+          name: "Loans",
+          path: "/loans",
+          logo: <Landmark size={16} />,
+        },
+        {
+          name: "General Insurance",
+          path: "/general_insurances",
+          logo: <Network size={16} />,
+        },
+        {
+          name: "demat Account",
+          path: "/demat_accounts",
+          logo: <AlignEndVertical size={16} />,
+        },
+      ],
+    },
+    {
+      name: "User Management",
+      path: "#",
+      logo: <Users size={16} />,
+      children: [
+        {
+          name: "Permissions",
+          path: "/permissions",
+          logo: <Paperclip size={16} />,
+        },
+        {
+          name: "Roles",
+          path: "/roles",
+          logo: <Notebook size={16} />,
+        },
+        {
+          name: "Users",
+          path: "/users",
+          logo: <UsersRound size={16} />,
         },
       ],
     },
   ];
 
-  const items = role === 'admin' ? adminItems : limitedItems;
+  const items = role === "admin" ? adminItems : limitedItems;
 
   const toggleChildren = (itemName) => {
     setActiveParent((prev) => (prev === itemName ? null : itemName)); // If same item clicked, close, else open it
@@ -182,10 +267,10 @@ const MobileSidebar = ({ open, setOpen }) => {
           <SheetHeader>
             <SheetTitle className="text-left mb-10">
               <div className="flex gap-3 p-1 text-2xl items-center text-white">
-                {' '}
+                {" "}
                 <LayoutDashboard />
                 Designer
-              </div>{' '}
+              </div>{" "}
             </SheetTitle>
           </SheetHeader>
           <ScrollArea className="h-full pr-3">
@@ -198,7 +283,7 @@ const MobileSidebar = ({ open, setOpen }) => {
                     {item.children ? (
                       <NavLink
                         className=" flex my-2 text-base px-1 py-2 hover:bg-dark-purple-light dark:hover:bg-gray-600 rounded items-center"
-                        to={item.path || '#'}
+                        to={item.path || "#"}
                         onClick={() =>
                           item.children && toggleChildren(item.name)
                         } // Toggle children visibility on click
@@ -214,7 +299,7 @@ const MobileSidebar = ({ open, setOpen }) => {
                                 className={`${
                                   item.children &&
                                   activeParent === item.name &&
-                                  'rotate-180'
+                                  "rotate-180"
                                 }`}
                               />
                             </p>
@@ -225,10 +310,10 @@ const MobileSidebar = ({ open, setOpen }) => {
                       <NavLink
                         className={({ isActive }) =>
                           ` flex my-2 px-1  py-2  hover:bg-dark-purple-light dark:hover:bg-gray-600  text-base rounded items-center ${
-                            isActive && 'bg-dark-purple-light  dark:bg-gray-600'
+                            isActive && "bg-dark-purple-light  dark:bg-gray-600"
                           }`
                         }
-                        to={item.path || '#'}
+                        to={item.path || "#"}
                         onClick={() =>
                           item.children && toggleChildren(item.name)
                         } // Toggle children visibility on click
@@ -244,7 +329,7 @@ const MobileSidebar = ({ open, setOpen }) => {
                                 className={`${
                                   item.children &&
                                   activeParent === item.name &&
-                                  'rotate-180'
+                                  "rotate-180"
                                 }`}
                               />
                             </p>
@@ -261,7 +346,7 @@ const MobileSidebar = ({ open, setOpen }) => {
                             className={({ isActive }) =>
                               ` ${
                                 isActive &&
-                                ' bg-dark-purple-light  dark:bg-gray-600'
+                                " bg-dark-purple-light  dark:bg-gray-600"
                               } pl-8 w-full py-2 my-2 gap-2 hover:bg-dark-purple-light dark:hover:bg-gray-600  rounded flex items-center text-sm`
                             }
                             to={child.path}

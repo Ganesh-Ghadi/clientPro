@@ -28,6 +28,7 @@ import {
   Calendar,
   FileKey2,
   Landmark,
+  AlignEndVertical,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -68,11 +69,6 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           path: "/lics",
           logo: <FileKey2 size={16} />,
         },
-        // {
-        //   name: "Other",
-        //   path: "/other_categories",
-        //   logo: <ClipboardPlus size={16} />,
-        // },
         {
           name: "Loans",
           path: "/loans",
@@ -82,6 +78,11 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           name: "General Insurance",
           path: "/general_insurances",
           logo: <Network size={16} />,
+        },
+        {
+          name: "demat Account",
+          path: "/demat_accounts",
+          logo: <AlignEndVertical size={16} />,
         },
       ],
     },
@@ -121,7 +122,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
       logo: <UsersRound size={16} />,
     },
     {
-      name: "Services",
+      name: "Categories",
       path: "#",
       logo: <SquareUserRound size={16} />,
       children: [
@@ -134,6 +135,26 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           name: "Term Plans",
           path: "/term_plans",
           logo: <HandCoins size={16} />,
+        },
+        {
+          name: "LIC",
+          path: "/lics",
+          logo: <FileKey2 size={16} />,
+        },
+        {
+          name: "Loans",
+          path: "/loans",
+          logo: <Landmark size={16} />,
+        },
+        {
+          name: "General Insurance",
+          path: "/general_insurances",
+          logo: <Network size={16} />,
+        },
+        {
+          name: "demat Account",
+          path: "/demat_accounts",
+          logo: <AlignEndVertical size={16} />,
         },
       ],
     },
