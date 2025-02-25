@@ -20,6 +20,9 @@ import UpdateUsers from "./pages/Users/Update";
 import Clients from "./pages/Clients/index";
 import CreateClients from "./pages/Clients/Create";
 import UpdateClients from "./pages/Clients/Update";
+import MutualFunds from "./pages/MutualFunds/index";
+import CreateMutualFunds from "./pages/MutualFunds/Create";
+import UpdateMutualFunds from "./pages/MutualFunds/Update";
 import DematAccounts from "./pages/DematAccounts/index";
 import CreateDematAccounts from "./pages/DematAccounts/Create";
 import UpdateDematAccounts from "./pages/DematAccounts/Update";
@@ -99,6 +102,12 @@ const App = () => {
           <Route path="/users" element={<Users />} />
           <Route path="/users/create" element={<CreateUsers />} />
           <Route path="/users/:id/edit" element={<UpdateUsers />} />
+          <Route path="/mutual_funds" element={<MutualFunds />} />
+          <Route path="/mutual_funds/create" element={<CreateMutualFunds />} />
+          <Route
+            path="/mutual_funds/:id/edit"
+            element={<UpdateMutualFunds />}
+          />
           <Route path="/clients" element={<Clients />} />
           <Route path="/clients/create" element={<CreateClients />} />
           <Route path="/clients/:id/edit" element={<UpdateClients />} />

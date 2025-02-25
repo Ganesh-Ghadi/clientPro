@@ -84,6 +84,11 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           path: "/demat_accounts",
           logo: <AlignEndVertical size={16} />,
         },
+        {
+          name: "Mutual Funds",
+          path: "/mutual_funds",
+          logo: <AlignStartVertical size={16} />,
+        },
       ],
     },
     {
@@ -155,6 +160,11 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }) => {
           name: "demat Account",
           path: "/demat_accounts",
           logo: <AlignEndVertical size={16} />,
+        },
+        {
+          name: "Mutual Funds",
+          path: "/mutual_funds",
+          logo: <AlignStartVertical size={16} />,
         },
       ],
     },

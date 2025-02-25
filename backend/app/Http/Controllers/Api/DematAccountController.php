@@ -22,9 +22,14 @@ class DematAccountController extends BaseController
         if ($request->query('search')) {
             $searchTerm = $request->query('search');
     
-            $query->whereHas("client",function ($query) use ($searchTerm) {
+            $query->where(function ($query) use ($searchTerm) {
+                $query->where('service_provider', 'like', '%' . $searchTerm . '%')
+                ->orWhere('account_number', 'like', '%' . $searchTerm . '%')
+                ->orWhereHas('client', function($query) use($searchTerm){
                     $query->where('client_name','like', '%' . $searchTerm . '%');
                 });
+
+            });
         }
         $dematAccounts = $query->Orderby('id', 'desc')->paginate(20);
 
@@ -44,11 +49,12 @@ class DematAccountController extends BaseController
     {
         $dematAccounts = new DematAccount();
         $dematAccounts->client_id = $request->input("client_id");
+        $dematAccounts->have_demat_account = $request->input("have_demat_account");
         $dematAccounts->account_number = $request->input("account_number");
         $dematAccounts->service_provider = $request->input("service_provider");
         $dematAccounts->save();
      
-        return $this->sendResponse(['DematAccount'=> new DematAccountResource($loan)], 'Demat Account Created Successfully');
+        return $this->sendResponse(['DematAccount'=> new DematAccountResource($dematAccounts)], 'Demat Account Created Successfully');
     }
 
    
@@ -78,6 +84,7 @@ class DematAccountController extends BaseController
         
         $dematAccounts->client_id = $request->input("client_id");
         $dematAccounts->account_number = $request->input("account_number");
+        $dematAccounts->have_demat_account = $request->input("have_demat_account");
         $dematAccounts->service_provider = $request->input("service_provider");
         $dematAccounts->save();
        

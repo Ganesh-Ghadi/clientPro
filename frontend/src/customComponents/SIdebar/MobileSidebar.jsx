@@ -147,6 +147,11 @@ const MobileSidebar = ({ open, setOpen }) => {
           path: "/demat_accounts",
           logo: <AlignEndVertical size={16} />,
         },
+        {
+          name: "Mutual Funds",
+          path: "/mutual_funds",
+          logo: <AlignStartVertical size={16} />,
+        },
       ],
     },
     {
@@ -218,6 +223,11 @@ const MobileSidebar = ({ open, setOpen }) => {
           name: "demat Account",
           path: "/demat_accounts",
           logo: <AlignEndVertical size={16} />,
+        },
+        {
+          name: "Mutual Funds",
+          path: "/mutual_funds",
+          logo: <AlignStartVertical size={16} />,
         },
       ],
     },

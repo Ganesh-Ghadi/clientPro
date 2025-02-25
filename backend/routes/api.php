@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\ReceiptsController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\TermPlansController;
 use App\Http\Controllers\Api\DepartmentController;
+use App\Http\Controllers\Api\MutualFundController;
 use App\Http\Controllers\Api\PoojaDatesController;
 use App\Http\Controllers\Api\PoojaTypesController;
 use App\Http\Controllers\Api\PermissionsController;
@@ -34,6 +35,7 @@ Route::group(['middleware'=>['auth:sanctum', 'permission']], function(){
   
    Route::resource('clients', ClientsController::class);  
    Route::resource('mediclaim_insurances', MediclaimInsurancesController::class);  
+   Route::resource('mutual_funds', MutualFundController::class);  
    Route::resource('demat_accounts', DematAccountController::class);  
    Route::resource('general_insurances', GeneralInsurancesController::class);  
    Route::resource('term_plans', TermPlansController::class);  
