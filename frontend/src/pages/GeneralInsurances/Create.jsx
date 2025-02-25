@@ -4,7 +4,6 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
 import DatePicker from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import {
@@ -21,6 +20,21 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Loader2, Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 const formSchema = z.object({
   // devta_name: z.string().min(2, "Name must be at least 2 characters"),
@@ -36,6 +50,7 @@ const formSchema = z.object({
 });
 const Create = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [openClient, setOpenClient] = useState(false);
   const queryClient = useQueryClient();
   const user = JSON.parse(localStorage.getItem("user"));
   const token = user.token;
@@ -77,6 +92,7 @@ const Create = () => {
     handleSubmit,
     formState: { errors },
     setError,
+    setValue,
   } = useForm({ resolver: zodResolver(formSchema), defaultValues });
 
   const storeMutation = useMutation({
@@ -150,7 +166,7 @@ const Create = () => {
           {/* row starts */}
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="w-full mb-2 grid grid-cols-1 md:grid-cols-2 gap-7 md:gap-4">
-              <div className="relative">
+              {/* <div className="relative">
                 <Label className="font-normal" htmlFor="client_id">
                   Client: <span className="text-red-500">*</span>
                 </Label>
@@ -178,6 +194,82 @@ const Create = () => {
                 />
                 {errors.client_id && (
                   <p className="absolute text-red-500 text-sm mt-1 left-0">
+                    {errors.client_id.message}
+                  </p>
+                )}
+              </div> */}
+              <div className="relative mt-2 flex flex-col gap-1">
+                <Label className="font-normal" htmlFor="client_id">
+                  Client: <span className="text-red-500">*</span>
+                </Label>
+                <Controller
+                  name="client_id"
+                  control={control}
+                  render={({ field }) => (
+                    <Popover open={openClient} onOpenChange={setOpenClient}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={openClient ? "true" : "false"} // This should depend on the popover state
+                          className=" w-[325px]  md:w-[490px] justify-between mt-1"
+                          onClick={() => setOpenClient((prev) => !prev)} // Toggle popover on button click
+                        >
+                          {field.value
+                            ? allClientsData?.Clients &&
+                              allClientsData?.Clients.find(
+                                (client) => client.id === field.value
+                              )?.client_name
+                            : "Select Client..."}
+                          <ChevronsUpDown className="opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[325px] p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder="Search client..."
+                            className="h-9"
+                          />
+                          <CommandList>
+                            <CommandEmpty>No client found.</CommandEmpty>
+                            <CommandGroup>
+                              {allClientsData?.Clients &&
+                                allClientsData?.Clients.map((client) => (
+                                  <CommandItem
+                                    key={client.id}
+                                    value={client.id}
+                                    onSelect={(currentValue) => {
+                                      setValue("client_id", client.id);
+                                      // setSelectedReceiptTypeId(
+                                      //   currentValue === selectedReceiptTypeId
+                                      //     ? ""
+                                      //     : currentValue
+                                      // );
+
+                                      setOpenClient(false);
+                                      // Close popover after selection
+                                    }}
+                                  >
+                                    {client.client_name}
+                                    <Check
+                                      className={cn(
+                                        "ml-auto",
+                                        client.id === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                />
+                {errors.client_id && (
+                  <p className="absolute text-red-500 text-sm mt-16 left-0">
                     {errors.client_id.message}
                   </p>
                 )}
