@@ -83,10 +83,6 @@ const Index = () => {
 
   // pagination end
 
-  if (isPermissionsDataError) {
-    return <p>Error fetching data</p>;
-  }
-
   const generatePermissionMutation = useMutation({
     mutationFn: async () => {
       const response = await axios.get(`/api/generate_permissions`, {
@@ -108,6 +104,10 @@ const Index = () => {
   const onPermissionGenerate = () => {
     generatePermissionMutation.mutate();
   };
+
+  if (isPermissionsDataError) {
+    return <p>Error fetching data</p>;
+  }
 
   return (
     <>
