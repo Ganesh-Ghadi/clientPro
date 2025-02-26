@@ -17,6 +17,7 @@ class MediclaimInsuranceResource extends JsonResource
         return [
             'id'                => $this->id,
             'client_id'         => $this->client_id,
+            'family_member_id'         => $this->family_member_id,
             'client_name'         => $this->client ? $this->client->client_name : "",
             'company_name'      => $this->company_name,
             'broker_name'       => $this->broker_name,

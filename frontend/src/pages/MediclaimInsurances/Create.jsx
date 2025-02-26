@@ -594,6 +594,13 @@ const Create = () => {
                         </p>
                       )}
                     </div>
+                    <Button
+                          type="button"
+                          onClick={() => remove(index)} // Remove family member
+                          className="mt-  bg-red-600 hover:bg-red-700 text-white"
+                        >
+                          Remove
+                        </Button>
                   </div>
                 </div>
               );

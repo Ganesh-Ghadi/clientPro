@@ -77,10 +77,12 @@ class MediclaimInsurancesController extends BaseController
     {
         $mediclaimInsurance = MediclaimInsurance::find($id);
 
-        if(!$mediclaimInsurance){
+        $mediclaimInsuranceData = MediclaimInsurance::where('client_id',$mediclaimInsurance->client_id)->get();
+
+        if(!$mediclaimInsuranceData){
             return $this->sendError("Mediclaim Insurance not found", ['error'=>'Mediclaim Insurance not found']);
         }
-        return $this->sendResponse(['MediclaimInsurance'=> new MediclaimInsuranceResource($mediclaimInsurance)], "Mediclaim Insurance retrieved successfully");
+        return $this->sendResponse(['MediclaimInsurance'=> MediclaimInsuranceResource::collection($mediclaimInsuranceData)], "Mediclaim Insurance retrieved successfully");
     }
 
     /**
@@ -88,19 +90,29 @@ class MediclaimInsurancesController extends BaseController
      */
     public function update(UpdateMediclaimInsuranceRequest $request, string $id): JsonResponse
     {
-        $mediclaimInsurance = MediclaimInsurance::find($id);
-        if(!$mediclaimInsurance){
-            return $this->sendError("Mediclaim Insurance not found", ['error'=>'Mediclaim Insurance not found']);
-        }
-        
-        $mediclaimInsurance->client_id = $request->input("client_id");
-        $mediclaimInsurance->company_name = $request->input("company_name");
-        $mediclaimInsurance->broker_name = $request->input("broker_name");
-        $mediclaimInsurance->proposal_date = $request->input("proposal_date");
-        $mediclaimInsurance->end_date = $request->input("end_date");
-        $mediclaimInsurance->premium_payment_mode = $request->input("premium_payment_mode");
-        $mediclaimInsurance->sum_insured = $request->input("sum_insured");
+      
+        $mediclaimData = $request->input('mediclaim_data'); // Array containing client and family member data
+
+        // foreach ($mediclaimData as $data) {
+
+        $removeFamilyMediclaim = MediclaimInsurance::where('client_id',$mediclaimData[0]['client_id'])->get();
+        $removeFamilyMediclaim->each(function($familyMember) {
+            $familyMember->delete();
+        });
+    // }
+
+        foreach ($mediclaimData as $data) {
+        $mediclaimInsurance = new MediclaimInsurance();
+        $mediclaimInsurance->client_id = $data['client_id'];
+        $mediclaimInsurance->family_member_id = $data['family_member_id'] ?? null;
+        $mediclaimInsurance->company_name = $data['company_name'];
+        $mediclaimInsurance->broker_name = $data['broker_name'];
+        $mediclaimInsurance->proposal_date = $data['proposal_date'];
+        $mediclaimInsurance->end_date = $data['end_date'];
+        $mediclaimInsurance->premium_payment_mode = $data['premium_payment_mode'];
+        $mediclaimInsurance->sum_insured = $data['sum_insured'];
         $mediclaimInsurance->save();
+       }
        
         return $this->sendResponse(['MediclaimInsurance'=> new MediclaimInsuranceResource($mediclaimInsurance)], "Mediclaim Insurance updated successfully");
     }
