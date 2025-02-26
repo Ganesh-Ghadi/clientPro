@@ -242,7 +242,11 @@ const Update = () => {
         });
       });
     }
-  }, [editMediclaim, append]); // Make sure to include append in the dependency array
+
+    if (showClientData) {
+      setFamilyMembers(showClientData?.Client?.Family_members);
+    }
+  }, [editMediclaim, append, showClientData]); // Make sure to include append in the dependency array
 
   useEffect(() => {
     // if (showClientData) {
@@ -659,13 +663,13 @@ const Update = () => {
                         </p>
                       )}
                     </div>
-                    <Button
+                    {/* <Button
                       type="button"
                       onClick={() => remove(index)} // Remove family member
                       className="mt-  bg-red-600 hover:bg-red-700 text-white"
                     >
                       Remove
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
               );
