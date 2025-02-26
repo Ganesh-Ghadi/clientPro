@@ -49,20 +49,15 @@ class MediclaimInsurancesController extends BaseController
     public function store(StoreMediclaimInsuranceRequest $request): JsonResponse
     {
         
-        $mediclaimData = $request->input('mediclaim_data'); // Array containing client and family member data
-
-    foreach ($mediclaimData as $data) {
         $mediclaimInsurance = new MediclaimInsurance();
-        $mediclaimInsurance->client_id = $data['client_id'];
-        $mediclaimInsurance->family_member_id = $data['family_member_id'] ?? null;
-        $mediclaimInsurance->company_name = $data['company_name'];
-        $mediclaimInsurance->broker_name = $data['broker_name'];
-        $mediclaimInsurance->proposal_date = $data['proposal_date'];
-        $mediclaimInsurance->end_date = $data['end_date'];
-        $mediclaimInsurance->premium_payment_mode = $data['premium_payment_mode'];
-        $mediclaimInsurance->sum_insured = $data['sum_insured'];
+        $mediclaimInsurance->client_id = $request->input("client_id");
+        $mediclaimInsurance->company_name = $request->input("company_name");
+        $mediclaimInsurance->broker_name = $request->input("broker_name");
+        $mediclaimInsurance->proposal_date = $request->input("proposal_date");
+        $mediclaimInsurance->end_date = $request->input("end_date");
+        $mediclaimInsurance->premium_payment_mode = $request->input("premium_payment_mode");
+        $mediclaimInsurance->sum_insured = $request->input("sum_insured");
         $mediclaimInsurance->save();
-    }
      
         return $this->sendResponse(['MediclaimInsurance'=> new MediclaimInsuranceResource($mediclaimInsurance)], 'Mediclaim Insurance Created Successfully');
    
