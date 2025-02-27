@@ -4,7 +4,7 @@ import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Loader2, Check, ChevronsUpDown } from "lucide-react";
+import { Loader2, Check, ChevronsUpDown, CircleX } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import DatePicker from "react-multi-date-picker";
@@ -409,7 +409,7 @@ const Create = () => {
                   {/* <h3>
                     {isClient ? "Client" : familyMember?.family_member_name}
                   </h3> */}
-                  <h3>
+                  <h3 className="font-bold tracking-wide">
                     {isClient
                       ? // For the first form, show "Client"
                         "Client"
@@ -612,25 +612,8 @@ const Create = () => {
                     >
                       Remove
                     </Button> */}
-                    {/* <Button
-                      type="button"
-                      onClick={() => {
-                        remove(index); // Remove the family member at the given index
-
-                        // Optionally, update the familyMembers array as well
-                        if (index !== 0) {
-                          // Exclude the client
-                          setFamilyMembers((prevMembers) => {
-                            const updatedMembers = [...prevMembers];
-                            updatedMembers.splice(index - 1, 1); // Remove the family member corresponding to the index
-                            return updatedMembers;
-                          });
-                        }
-                      }}
-                      className="mt-1 bg-red-600 hover:bg-red-700 text-white"
-                    >
-                      Remove
-                    </Button> */}
+                  </div>
+                  <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-9 gap-7 md:gap-4">
                     <Button
                       type="button"
                       onClick={() => {

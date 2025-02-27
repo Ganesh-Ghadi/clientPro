@@ -400,6 +400,7 @@ const Update = () => {
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
+                          disabled
                           role="combobox"
                           aria-expanded={openClient ? "true" : "false"} // This should depend on the popover state
                           className=" w-[325px]  md:w-[490px] justify-between mt-1"
@@ -419,6 +420,7 @@ const Update = () => {
                           <CommandInput
                             placeholder="Search client..."
                             className="h-9"
+                            disabled
                           />
                           <CommandList>
                             <CommandEmpty>No client found.</CommandEmpty>
@@ -471,7 +473,7 @@ const Update = () => {
 
               return (
                 <div key={item.id}>
-                  <h3>
+                  <h3 className="font-bold tracking-wide">
                     {isClient ? "Client" : familyMember?.family_member_name}
                   </h3>
 
