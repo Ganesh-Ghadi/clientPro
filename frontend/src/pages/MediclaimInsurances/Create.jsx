@@ -399,23 +399,32 @@ const Create = () => {
             {fields.map((item, index) => {
               // const isClient = index === 0;
               // const familyMember = !isClient ? familyMembers[index - 1] : null;
-              const isClient = index === 0;
-
-              // If the current form is not the client, get the correct family member from the familyMembers array
-              const familyMember = !isClient ? familyMembers[index - 1] : null;
+              // const isClient = index === 0;
+              // const familyMember = !isClient ? familyMembers[index - 1] : null;
+              const isClient = !item.family_member_id;
+              // For family members, find the matching member from the familyMembers state
+              const memberData = !isClient
+                ? familyMembers.find(
+                    (member) => member.id === item.family_member_id
+                  )
+                : null;
+              const heading = isClient
+                ? "Client"
+                : memberData?.family_member_name || "Family Member";
 
               return (
                 <div key={item.id}>
                   {/* <h3>
                     {isClient ? "Client" : familyMember?.family_member_name}
                   </h3> */}
-                  <h3 className="font-bold tracking-wide">
+                  {/* <h3 className="font-bold tracking-wide">
                     {isClient
                       ? // For the first form, show "Client"
                         "Client"
                       : // After removing the client, family members should be properly indexed
                         familyMember?.family_member_name || "Family Member"}
-                  </h3>
+                  </h3> */}
+                  <h3 className="font-bold tracking-wide">{heading}</h3>
 
                   <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
                     {/* Company Name */}
@@ -614,7 +623,7 @@ const Create = () => {
                     </Button> */}
                   </div>
                   <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-9 gap-7 md:gap-4">
-                    <Button
+                    {/* <Button
                       type="button"
                       onClick={() => {
                         remove(index); // Remove the family member or client form
@@ -630,6 +639,25 @@ const Create = () => {
                             return updatedMembers;
                           });
                         }
+                      }}
+                      className="mt-1 bg-red-600 hover:bg-red-700 text-white"
+                    >
+                      Remove
+                    </Button> */}
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        remove(index); // Remove the selected form field
+
+                        if (index !== 0) {
+                          // Only update familyMembers when a family member form is removed
+                          setFamilyMembers((prevMembers) => {
+                            const updatedMembers = [...prevMembers];
+                            updatedMembers.splice(index - 1, 1); // Remove the corresponding family member
+                            return updatedMembers;
+                          });
+                        }
+                        // If the client (index 0) is removed, do not update familyMembers.
                       }}
                       className="mt-1 bg-red-600 hover:bg-red-700 text-white"
                     >

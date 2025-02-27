@@ -238,7 +238,7 @@ const Update = () => {
           proposal_date: insurance.proposal_date,
           premium_payment_mode: insurance.premium_payment_mode,
           sum_insured: insurance.sum_insured,
-          end_date: insurance.end_date,
+          end_date: insurance.end_date || "",
         });
       });
     }
@@ -468,14 +468,25 @@ const Update = () => {
               </div>
             </div>
             {fields.map((item, index) => {
-              const isClient = index === 0;
-              const familyMember = !isClient ? familyMembers[index - 1] : null;
+              // const isClient = index === 0;
+              // const familyMember = !isClient ? familyMembers[index - 1] : null;
+              const isClient = !item.family_member_id;
+              // For family members, find the matching member from the familyMembers state
+              const memberData = !isClient
+                ? familyMembers.find(
+                    (member) => member.id === item.family_member_id
+                  )
+                : null;
+              const heading = isClient
+                ? "Client"
+                : memberData?.family_member_name || "Family Member";
 
               return (
                 <div key={item.id}>
-                  <h3 className="font-bold tracking-wide">
+                  {/* <h3 className="font-bold tracking-wide">
                     {isClient ? "Client" : familyMember?.family_member_name}
-                  </h3>
+                  </h3> */}
+                  <h3 className="font-bold tracking-wide">{heading}</h3>
 
                   <div className="w-full mb-5 grid grid-cols-1 md:grid-cols-3 gap-7 md:gap-4">
                     {/* Company Name */}
